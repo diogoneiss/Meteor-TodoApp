@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 import { Accounts } from 'meteor/accounts-base';
-import { check } from 'meteor/check';
-
+import { check, Match } from 'meteor/check';
+import { Log } from 'meteor/logging'
 
 Accounts.onCreateUser((options, user) => {
   // Use provided `profile` or create an empty object
@@ -31,7 +31,12 @@ Meteor.methods({
       gender: String,
       company: String,
       photo: String,
+      email: Match.Optional(String), 
+      password: Match.Optional(String), 
+      username: Match.Optional(String) 
     });
+
+    Log.debug(`users.register data: ${JSON.stringify(data)}`);
 
     // Se já está logado só atualizamos o perfil
     if (this.userId) {
@@ -42,15 +47,14 @@ Meteor.methods({
           'profile.sexo': data.gender,
           'profile.empresa': data.company,
           'profile.foto': data.photo,
+          
         },
       });
       return;
     }
     
     const userId = Accounts.createUser({
-      //username is name of the user without spaces
-      //and all lowercase
-      username: data.email,
+      username: data.username,
       password: data.password,
       profile: {
         nome: data.name,
@@ -58,10 +62,11 @@ Meteor.methods({
         sexo: data.gender,
         empresa: data.company,
         foto: data.photo,
+        oauth: 'local',
       },
     });
 
-    // Optionally, you could also set a password or send a verification email here
+    this.setUserId(userId);
 
     return userId;
   },

@@ -32,6 +32,7 @@ Meteor.startup(() => {
 
   const user = Accounts.findUserByUsername(SEED_USERNAME);
 
+  //TODO: melhorar as tasks iniciais
   if (TasksCollection.find().count() === 0) {
     [
       'First Task',

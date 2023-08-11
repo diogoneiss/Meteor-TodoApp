@@ -3,29 +3,25 @@ import { Meteor } from 'meteor/meteor';
 import { Button, Box } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
-
+import {AccountStatus, getAccountStatus} from '../utils/accountStatus'
 export const LoginWithGithub = () => {
   const navigate = useNavigate();
 
-  const handleGithubLogin = () => {
+  const handleGithubLogin = async () => {
     Meteor.loginWithGithub({
       requestPermissions: ['user'],
-      loginStyle: 'popup'}, (err) => {
+      loginStyle: 'popup'}, async (err) => {
         if (err) {
           alert(err)
         } else {
-          Meteor.call('user.isFullyRegistered', (error, isFullyRegistered) => {
-            console.log("isFullyRegistered: ", !!isFullyRegistered);
-
-            if (error) {
-              
-            } else if (!!isFullyRegistered) {
-              navigate('/');
-            } else {
-              //add extra fields to profile
-              navigate('/signup');
-            }
-          });
+          let status = await getAccountStatus();
+          console.log("status pela função: ", status);
+          if (status === AccountStatus.PARTIAL) {
+            navigate('/signup');
+          }
+          else if (status === AccountStatus.FULL){
+            navigate('/');
+          }
         }
     });
   };

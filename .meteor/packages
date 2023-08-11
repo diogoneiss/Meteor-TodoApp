@@ -25,3 +25,4 @@ accounts-github
 service-configuration
 meteortesting:mocha
 accounts-google
+logging
