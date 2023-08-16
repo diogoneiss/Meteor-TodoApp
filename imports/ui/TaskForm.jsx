@@ -1,29 +1,58 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Button, TextField, FormControl, FormControlLabel, Checkbox, Container } from '@mui/material';
 
 export const TaskForm = () => {
-    const [text, setText] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [isPrivate, setIsPrivate] = useState(false);
 
-    const handleSubmit = e => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!text) return;
+        if (!title) return;
 
-        Meteor.call('tasks.insert', text);
+        const task = {
+            title,
+            description,
+            isPrivate,
+        };
 
-        setText('');
+        Meteor.call('tasks.insert', task);
+
+        setTitle('');
+        setDescription('');
+        setIsPrivate(false);
     };
 
     return (
-        <form className="task-form" onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="Type to add new tasks"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-            />
-
-            <button type="submit">Add Task</button>
-        </form>
+        <Container component="main" maxWidth="xs">
+            <form onSubmit={handleSubmit}>
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    label="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    label="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                
+                <FormControlLabel
+                    control={<Checkbox checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />}
+                    label="Tarefa privada?"
+                />
+                <Button type="submit" fullWidth variant="contained" color="primary">
+                    Adicionar tarefa
+                </Button>
+            </form>
+        </Container>
     );
 };

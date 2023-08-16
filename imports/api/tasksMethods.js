@@ -1,20 +1,35 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { TasksCollection } from '../db/TasksCollection';
- 
+import { Log } from 'meteor/logging'
+import { taskStatuses } from '../models/taskModel';
+
 Meteor.methods({
-  'tasks.insert'(text) {
-    check(text, String);
+  'tasks.insert'(task) {
+    check(task, {
+      title: String,
+      description: String,
+      isPrivate: Boolean,
+    });
+    
 
     if (!this.userId) {
       throw new Meteor.Error('Not authorized.');
     }
 
     TasksCollection.insert({
-      text,
+      title: task.title,
+      description: task.description,
+      isPrivate: task.isPrivate,
+      status: taskStatuses.CADASTRADA,
       createdAt: new Date,
+      updatedAt: null,
       userId: this.userId,
+      //evitar ter que fazer uma nova busca no front
+      username: Meteor.users.findOne(this.userId).username,
     })
+
+    Log.debug(`inserida tarefa: ${JSON.stringify(task)}`);
   },
 
   'tasks.remove'(taskId) {
