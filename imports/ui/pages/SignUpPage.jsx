@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import CenteredContainer from '../components/CenteredContainer';
 import { AccountStatus, getAccountStatus } from '../utils/accountStatus'
 
-export const SignupForm = ({ user }) => {
+export const SignupForm = ({ user, accountStatus }) => {
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState('');
@@ -24,9 +24,9 @@ export const SignupForm = ({ user }) => {
   };
 
   const redirectIfSignedIn = async () => {
-    const status = await getAccountStatus(user);
-    console.log("status: ", status)
-    if (status === AccountStatus.FULL) {
+    
+    console.log("status inside signup: ", accountStatus)
+    if (accountStatus === AccountStatus.FULL) {
 
       redirectAfterSignup();
     }

@@ -67,9 +67,6 @@ const App = () => {
       <div className="main">
         {user ? (
           <Fragment>
-            <div className="user" onClick={logout}>
-              {user.username || user.profile.name}🚪
-            </div>
             <TaskForm />
 
             <div className="filter">
@@ -85,7 +82,6 @@ const App = () => {
                 <Task
                   key={task._id}
                   task={task}
-                  onCheckboxClick={toggleChecked}
                   onDeleteClick={deleteTask}
                 />
               ))}

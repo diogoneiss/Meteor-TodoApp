@@ -4,10 +4,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import {taskStatuses} from '../models/taskModel';
+import { useNavigate } from 'react-router-dom';
 
-export const Task = ({ task, onEditClick, onDeleteClick }) => {
+export const Task = ({ task, onDeleteClick }) => {
   let statusIcon;
   let statusText;
+
+  let navigate = useNavigate();
+
+  const handleEditClick = (task) => {
+    navigate(`/app/${task._id}`);
+  };
 
   switch (task.status) {
     case taskStatuses.CADASTRADA:
@@ -33,11 +40,11 @@ export const Task = ({ task, onEditClick, onDeleteClick }) => {
         primary={task.title}
         secondary={
           <Typography component="span" variant="body2" color="text.secondary">
-            {`Created by ${task.username} - ${statusText}`}
+            {`Criado por ${task.username} - ${statusText}`}
           </Typography>
         }
       />
-      <IconButton edge="end" aria-label="edit" onClick={() => onEditClick(task)}>
+      <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(task)}>
         <EditIcon />
       </IconButton>
       <IconButton edge="end" aria-label="delete" onClick={() => onDeleteClick(task)}>
