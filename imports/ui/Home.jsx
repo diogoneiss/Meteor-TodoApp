@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import App from './pages/App';
 import WelcomePage from './pages/Welcome';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -7,6 +8,8 @@ import { SignupForm } from './pages/SignUpPage';
 import { LoginForm } from './pages/LoginPage';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
+import {AccountStatus, getAccountStatus} from './utils/accountStatus'
+
 import {
   BrowserRouter,
   Routes,
@@ -18,7 +21,19 @@ import {
 const Home = () => {
 
   const user = useTracker(() => Meteor.user());
-  
+  const [accountStatus, setAccountStatus] = useState(AccountStatus.LOGGED_OUT);
+
+  useEffect(() => {
+    const fetchAccountStatus = async () => {
+        if (user) {
+            const status = await getAccountStatus(user);
+            setAccountStatus(status);
+        }
+    };
+
+    fetchAccountStatus();
+}, [user]);
+
 
 
   return (
@@ -30,7 +45,7 @@ const Home = () => {
         <Route
           path="*"
           element={
-            <ProtectedRoute user={user}>
+            <ProtectedRoute user={user} accStatus={accountStatus} >
               <Routes>
                 <Route path="/app" element={<App />} />
                 <Route path="/" element={<WelcomePage  />} />
