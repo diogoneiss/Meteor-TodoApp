@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Button, TextField, FormControl, FormControlLabel, Checkbox, Container } from '@mui/material';
+import { Button, TextField, FormControl, FormControlLabel, Checkbox, Container, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const accordionStyle = {
+    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+    marginBottom: "20px",
+    maxWidth: "70vw",
+    margin: "auto",
+  };
+  
+
 
 export const TaskForm = () => {
     const [title, setTitle] = useState('');
@@ -26,33 +36,44 @@ export const TaskForm = () => {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    label="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                
-                <FormControlLabel
-                    control={<Checkbox checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />}
-                    label="Tarefa privada?"
-                />
-                <Button type="submit" fullWidth variant="contained" color="primary">
-                    Adicionar tarefa
-                </Button>
-            </form>
-        </Container>
+        <Accordion style={accordionStyle}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel-content"
+                id="panel-header"
+            >
+                <Typography variant='body1'>Inserir nova tarefa</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Container component="main" maxWidth="xs">
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            label="Título"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <TextField
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            label="Descrição"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+
+                        <FormControlLabel
+                            control={<Checkbox checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />}
+                            label="Tarefa privada?"
+                        />
+                        <Button type="submit" fullWidth variant="contained" color="primary">
+                            Adicionar tarefa
+                        </Button>
+                    </form>
+                </Container>
+            </AccordionDetails>
+        </Accordion>
     );
 };
