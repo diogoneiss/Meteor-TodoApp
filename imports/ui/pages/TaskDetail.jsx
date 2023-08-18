@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Container } from '@mui/material';
-import { spacing } from '@mui/system';
-
+import CenteredLoading from '../components/CenteredLoading';
 import { Meteor } from 'meteor/meteor';
 import { useParams } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -20,6 +19,7 @@ export function TaskViewEdit() {
 
 
   const { isLoading, subscriptionError } = useTracker(() => {
+    console.log("Carregando subscription com id ", taskId)
     const subscription = Meteor.subscribe('task.byId', taskId, {
       onStop: (error) => {
         if (error) {
@@ -41,7 +41,7 @@ export function TaskViewEdit() {
   }, [taskId]);
 
   if (subscriptionError) return <div>Error: {subscriptionError}</div>;
-  if (isLoading || !task) return <div>Carregando...</div>;
+  if (isLoading || !task) return <CenteredLoading />;
 
 
   const handleEditClick = () => {

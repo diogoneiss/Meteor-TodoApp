@@ -14,6 +14,7 @@ Meteor.publish('tasks', function publishTasks() {
 
 Meteor.publish('task.byId', function getTaskById(taskId) {
   check(taskId, String);
+  Log.debug(`publicando tarefa: ${JSON.stringify(taskId)}`);
   
   const task = TasksCollection.findOne({ _id: taskId });
 
@@ -25,7 +26,6 @@ Meteor.publish('task.byId', function getTaskById(taskId) {
     throw new Meteor.Error('403', 'Acesso restrito, tarefa privada');
   }
 
-  Log.debug(`publicando tarefa: ${JSON.stringify(task)}`);
 
   return TasksCollection.find({ _id: taskId });
 });

@@ -7,6 +7,7 @@ import Header from './components/Header.jsx';
 import { SignupForm } from './pages/SignUpPage';
 import { LoginForm } from './pages/LoginPage';
 import { Meteor } from 'meteor/meteor';
+import TaskDetail from './pages/TaskDetail';
 import { useTracker } from 'meteor/react-meteor-data';
 import {AccountStatus, getAccountStatus} from './utils/accountStatus'
 
@@ -48,7 +49,8 @@ const Home = () => {
             <ProtectedRoute user={user} accStatus={accountStatus} >
               <Routes>
                 <Route path="/app" element={<App />} />
-                <Route path="/" element={<WelcomePage  />} />
+                <Route path="/" element={<WelcomePage  />} />  
+                <Route path="/app/:taskId" element={<TaskDetail/>} />
               </Routes>
             </ProtectedRoute>
           }

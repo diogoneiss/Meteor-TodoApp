@@ -6,7 +6,7 @@ import { Task } from '../Task';
 import { TaskForm } from '../TaskForm';
 import { LoginForm } from './LoginPage';
 import {Typography, Container, Box} from '@mui/material';
-
+import CenteredLoading from '../components/CenteredLoading';
 
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
@@ -71,7 +71,7 @@ const App = () => {
               </button>
             </div>
 
-            {isLoading && <div className="loading">loading...</div>}
+            {isLoading && <CenteredLoading />}
 
             <ul className="tasks">
               {tasks.map(task => (
