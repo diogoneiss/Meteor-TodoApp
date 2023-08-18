@@ -5,6 +5,22 @@ import { Log } from 'meteor/logging'
 import { taskStatuses } from '../models/taskModel';
 
 Meteor.methods({
+  'task.byId': function getTaskById(taskId) {
+    check(taskId, String);
+    Log.debug(`buscando tarefa: ${JSON.stringify(taskId)}`);
+
+    const task = TasksCollection.findOne({ _id: taskId });
+
+    if (!task) {
+      throw new Meteor.Error('404 - Tarefa não encontrada');
+    }
+
+    if (task.isPrivate && task.userId !== this.userId) {
+      throw new Meteor.Error('403 - Acesso restrito, tarefa privada');
+    }
+
+    return task;
+  },
   'tasks.insert'(task) {
     check(task, {
       title: String,

@@ -19,8 +19,7 @@ export const getAccountStatus = async (user) => {
         reject(error); 
       } else if (!!isFullyRegistered) {
         resolve(AccountStatus.FULL);
-      } else {
-        
+      } else { 
         resolve(AccountStatus.PARTIAL);
       }
     });

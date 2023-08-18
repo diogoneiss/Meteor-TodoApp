@@ -6,10 +6,9 @@ import { check, Match } from 'meteor/check';
 import { Log } from 'meteor/logging'
 
 Accounts.onCreateUser((options, user) => {
-  // Use provided `profile` or create an empty object
+
   user.profile = options.profile || {};
 
-  // If the user has logged in with Github, copy certain fields
   if (user.services.github) {
     user.profile.email = user.profile.email || user.services.github.email;
     user.profile.nome = user.profile.nome || user.services.github.name;

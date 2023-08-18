@@ -11,6 +11,7 @@ import ErrorDisplay from '../components/AlertComponent';
 import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
+import { Task } from '../Task';
 
 export function TaskViewEdit() {
   const [task, setTask] = useState(null);
@@ -18,6 +19,9 @@ export function TaskViewEdit() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [error, setError] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const isCreator = Meteor.userId() === task?.userId;
 
   const navigate = useNavigate();
 
@@ -36,31 +40,24 @@ export function TaskViewEdit() {
     setTask(originalTask);
   }
 
+  useEffect(() => {
+    setLoading(true);
 
-  const { isLoading, subscriptionError } = useTracker(() => {
-    console.log("Carregando subscription com id ", taskId)
-    const subscription = Meteor.subscribe('task.byId', taskId, {
-      onStop: (error) => {
-        if (error) {
-          console.error(`Aconteceu um erro na subscription: ${error.reason}`);
-        }
+    Meteor.call('task.byId', taskId, (err, result) => {
+      setLoading(false);
+
+      if (err) {
+        setError(err);
+      } else {
+        setTask(result);
+        setOriginalTask(result);
       }
     });
-
-    const taskData = TasksCollection.findOne(taskId);
-    if (taskData) {
-      setTask(taskData);
-      setOriginalTask(taskData);
-    }
-
-    return {
-      isLoading: !subscription.ready(),
-      subscriptionError: subscription.error ? subscription.error.reason : null,
-    };
   }, [taskId]);
 
-  if (subscriptionError) return <div>Error: {subscriptionError}</div>;
-  if (isLoading || !task) return <CenteredLoading />;
+
+  if (error) return <ErrorDisplay message={error.error} severity='error' />;
+  if (loading || !task) return <CenteredLoading />;
 
 
   const handleEditClick = () => {
@@ -132,14 +129,21 @@ export function TaskViewEdit() {
         />
 
         {!isEditMode ?
-          <Button
-            sx={{ my: '1rem' }}
-            variant="contained"
-            fullWidth
-            onClick={handleEditClick}
-            disabled={Meteor.userId() !== task.userId}>
-            Editar
-          </Button>
+          <>
+            <Button
+              sx={{ my: '1rem' }}
+              variant="contained"
+              fullWidth
+              onClick={handleEditClick}
+              disabled={Meteor.userId() !== task.userId}>
+              Editar
+            </Button>
+            {!isCreator &&
+            <Typography variant="caption" display="block" textAlign="center" mt={1}>
+              Você não pode editar essa tarefa pois não é o criador dela
+            </Typography>
+}
+          </>
           :
           <Button
             sx={{ my: '1rem' }}
@@ -158,8 +162,10 @@ export function TaskViewEdit() {
           </Button>
         )}
       </form>
-      {feedback && <Container maxWidth="sm" >
-        <ErrorDisplay message={feedback} severity='success' />
+      <Container maxWidth="sm" >
+        {feedback &&
+          <ErrorDisplay message={feedback} severity='success' />
+        }
         <Box
           display="flex"
           alignItems="center"
@@ -171,7 +177,7 @@ export function TaskViewEdit() {
           </Button>
         </Box>
       </Container>
-      }
+
     </Container>
   );
 }
@@ -207,7 +213,7 @@ const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
 
   useEffect(() => {
     setAllowedStatuses(determineAllowedStatuses(originalTask.status));
-    console.log("Status original: ", originalTask, "e allowedStatuses: ", )
+    console.log("Status original: ", originalTask, "e allowedStatuses: ",)
     console.log("Status no objeto: ", originalTask.status)
     setSelectedStatus(originalTask.status);
   }, [originalTask]);

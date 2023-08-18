@@ -30,6 +30,9 @@ const Home = () => {
             const status = await getAccountStatus(user);
             setAccountStatus(status);
         }
+        else {
+            setAccountStatus(AccountStatus.LOGGED_OUT);
+        }
     };
 
     fetchAccountStatus();

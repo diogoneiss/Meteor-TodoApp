@@ -38,7 +38,7 @@ export default function MenuAppBar({ user }) {
     }
   };
 
- 
+
   React.useEffect(() => {
     setTitle(getTitleByLocation);
   }, [location]);
@@ -56,10 +56,15 @@ export default function MenuAppBar({ user }) {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleMyAccount = () => {
+    navigate("/account");
+  }
+
 
   return (
     <Box marginBottom={3} sx={{ flexGrow: 1 }}>
@@ -81,16 +86,28 @@ export default function MenuAppBar({ user }) {
           </Typography>
           {user && (
             <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
+              <Box aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+                onClick={handleMenu} display="flex" alignItems="center">
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Typography
+                  sx={{
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    }
+                  }}
+                >
+                  {user.username}
+                </Typography>
+              </Box>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -106,7 +123,7 @@ export default function MenuAppBar({ user }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Minha conta</MenuItem>
+                <MenuItem onClick={handleMyAccount}>Minha conta</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
@@ -114,18 +131,18 @@ export default function MenuAppBar({ user }) {
         </Toolbar>
       </AppBar>
       <Drawer open={drawerOpen} onClose={toggleDrawer}>
-        <List sx={{marginLeft: "1rem"}}>
-          <ListItem button onClick={() => {navigate("/")}}>
+        <List sx={{ marginLeft: "1rem" }}>
+          <ListItem button onClick={() => { navigate("/") }}>
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button onClick={() => {/* falta isso*/}}>
+          <ListItem button onClick={() => {/* falta isso*/ }}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
-            <ListItemText primary="Conta xxxxx" />
+            <ListItemText primary={`Conta - ${user.username}`} />
           </ListItem>
         </List>
       </Drawer>
