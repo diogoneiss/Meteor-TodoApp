@@ -11,6 +11,7 @@ const ProtectedRoute = ({ children, user, accStatus }) => {
     return <Navigate to="/login" />;
   }
   else if (accStatus === AccountStatus.PARTIAL) {
+    console.log("Account is parcial, redirecting")
     return <Navigate to="/signup" />;
   }
 

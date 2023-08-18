@@ -17,14 +17,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MenuAppBar({ user }) {
 
   const [title, setTitle] = React.useState("App");
+
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getTitleByLocation = () => {
+    if (/^\/app(\/.*)?$/.test(location.pathname)) {
+      return "Visualizando tarefa";
+    }
     switch (location.pathname) {
       case '/login': return 'Login';
       case '/signup': return 'Signup';
@@ -110,7 +115,7 @@ export default function MenuAppBar({ user }) {
       </AppBar>
       <Drawer open={drawerOpen} onClose={toggleDrawer}>
         <List>
-          <ListItem button onClick={() => {/* Navigate to home */}}>
+          <ListItem button onClick={() => {navigate("/")}}>
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>

@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import Home from '/imports/ui/Home.jsx';
 
 
+
 Meteor.startup(() => {
   const container = document.getElementById('react-target');
   console.log('rendered component: ', Home);

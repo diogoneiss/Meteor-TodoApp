@@ -5,8 +5,8 @@ import { TasksCollection } from '/imports/db/TasksCollection';
 import { Task } from '../Task';
 import { TaskForm } from '../TaskForm';
 import { LoginForm } from './LoginPage';
+import {Typography, Container, Box} from '@mui/material';
 
-const toggleChecked = ({ _id, isChecked }) => Meteor.call('tasks.setIsChecked', _id, !isChecked);
 
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
@@ -34,35 +34,31 @@ const App = () => {
       return { ...noDataAvailable, isLoading: true };
     }
 
-    const tasks = TasksCollection.find(
-      hideCompleted ? pendingOnlyFilter : userFilter,
+    const tasks = TasksCollection.find({},
       {
         sort: { createdAt: -1 },
       }
     ).fetch();
+
     const pendingTasksCount = TasksCollection.find(pendingOnlyFilter).count();
 
     return { tasks, pendingTasksCount };
   });
 
 
-  const pendingTasksTitle = `${pendingTasksCount ? ` (${pendingTasksCount})` : ''
-    }`;
 
-
-  const logout = () => Meteor.logout();
   return (
     <div className="app">
-      <header>
-        <div className="app-bar">
-          <div className="app-header">
-            <h1>
-              📝️ To Do List
-              {pendingTasksTitle}
-            </h1>
-          </div>
-        </div>
-      </header>
+      <Box marginBottom={3} sx={{ flexGrow: 1 }}>
+      <Typography align='center' variant="h3" sx={{ flexGrow: 1 }}>
+        📝️ To Do List
+        </Typography>
+         
+      <Typography align='center' variant="h5" sx={{ flexGrow: 1 }}>
+
+      {pendingTasksCount === 0 ? "Você não tem tarefas pendentes" : `Você tem ${pendingTasksCount} tarefas pendentes`}
+      </Typography>
+      </Box>
 
       <div className="main">
         {user ? (

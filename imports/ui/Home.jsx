@@ -41,7 +41,7 @@ const Home = () => {
       <Header user={user} />
       <Routes>
         <Route path="/login" element={<LoginForm user={user}  />} />
-        <Route path="/signup" element={<SignupForm user={user}  />} />
+        <Route path="/signup" element={<SignupForm user={user} accountStatus={accountStatus}  />} />
         <Route
           path="*"
           element={
