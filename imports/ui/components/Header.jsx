@@ -114,18 +114,18 @@ export default function MenuAppBar({ user }) {
         </Toolbar>
       </AppBar>
       <Drawer open={drawerOpen} onClose={toggleDrawer}>
-        <List>
+        <List sx={{marginLeft: "1rem"}}>
           <ListItem button onClick={() => {navigate("/")}}>
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button onClick={() => {/* Navigate to profile */}}>
+          <ListItem button onClick={() => {/* falta isso*/}}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
-            <ListItemText primary="Profile" />
+            <ListItemText primary="Conta xxxxx" />
           </ListItem>
         </List>
       </Drawer>
