@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Container, RadioGroup, Radio, FormControl } from '@mui/material';
+import { Button, TextField, FormControlLabel, Checkbox, Container, RadioGroup, Radio, FormControl, Box, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CenteredLoading from '../components/CenteredLoading';
 import { Meteor } from 'meteor/meteor';
 import { useParams } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import { taskStatuses } from '../../models/taskModel';
+import ErrorDisplay from '../components/AlertComponent';
+import { formatDistanceToNow } from 'date-fns';
+import { pt } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
 export function TaskViewEdit() {
   const [task, setTask] = useState(null);
   const [originalTask, setOriginalTask] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [error, setError] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
 
   const handleStatusChange = (newStatus) => {
@@ -63,19 +76,29 @@ export function TaskViewEdit() {
     }
   };
 
-  const handleSubmit = () => {
-    // TODO: 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     Meteor.call('tasks.update', task, (error) => {
       if (error) {
         console.error(error);
+        setError(error.error);
+        setFeedback(null);
       } else {
         setIsEditMode(false);
+        setError(null);
+        setFeedback('Tarefa atualizada com sucesso!');
+        setOriginalTask(task);
       }
     });
   };
 
+
+
   return (
     <Container component="main" maxWidth="xs">
+      {error && <ErrorDisplay message={error} />}
+      <TaskInfo task={task} />
       <form onSubmit={handleSubmit}>
         <TextField
           label="Título"
@@ -98,7 +121,7 @@ export function TaskViewEdit() {
         {/*
         Detalhe importante: usamos o valor da task original pois o valor da task atual pode ter sido alterado pelo usuário, mas ainda não foi salvo no banco de dados, então a regra de negócio pode ser violada
         */}
-        <TransitionForm disabled={!isEditMode} originalStatus={originalTask.status} onStatusChange={handleStatusChange} />
+        <TransitionForm disabled={!isEditMode} originalStatus={originalTask.status} originalTask={originalTask} onStatusChange={handleStatusChange} />
 
 
         <FormControlLabel
@@ -135,38 +158,63 @@ export function TaskViewEdit() {
           </Button>
         )}
       </form>
+      {feedback && <Container maxWidth="sm" >
+        <ErrorDisplay message={feedback} severity='success' />
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ my: '1rem' }}
+        >
+          <Button variant="outlined" color="primary" onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
+            Voltar
+          </Button>
+        </Box>
+      </Container>
+      }
     </Container>
   );
 }
 
 
-const TransitionForm = ({originalStatus, onStatusChange, disabled }) => {
+const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
   //Como poderiamos lidar com essa restrição de transição de status?
-  const [selectedStatus, setSelectedStatus] = useState(originalStatus);
+  const [selectedStatus, setSelectedStatus] = useState(originalTask.status);
+  console.log("Status selecionado: ", selectedStatus)
 
   const handleRadioChange = (event) => {
     setSelectedStatus(event.target.value);
     onStatusChange(event.target.value);
   };
 
-  const [allowedStatuses, setAllowedStatuses] = useState([true, true, false]);
-
-  useEffect(() => {
-    switch (originalStatus) {
+  const determineAllowedStatuses = (status) => {
+    switch (status) {
       case taskStatuses.CADASTRADA:
-        setAllowedStatuses([true, true, false]);
-        break;
+        return [true, true, false];
+
       case taskStatuses.EM_ANDAMENTO:
-        setAllowedStatuses([true, true, false]);
-        break;
+        return [true, true, true];
+
       case taskStatuses.CONCLUIDA:
-        setAllowedStatuses([true, false, true]);
-        break;
+        return [true, false, true];
+      default:
+        console.error("Status inválido: ", status)
+        return [true, false, false];
     }
-  }, [originalStatus]);
+  }
+
+  const [allowedStatuses, setAllowedStatuses] = useState(determineAllowedStatuses(originalTask.status));
 
   useEffect(() => {
-    setSelectedStatus(originalStatus);
+    setAllowedStatuses(determineAllowedStatuses(originalTask.status));
+    console.log("Status original: ", originalTask, "e allowedStatuses: ", )
+    console.log("Status no objeto: ", originalTask.status)
+    setSelectedStatus(originalTask.status);
+  }, [originalTask]);
+
+  //necessário para resetar o form
+  useEffect(() => {
+    setSelectedStatus(originalTask.status);
   }, [disabled]);
 
   return (
@@ -182,19 +230,32 @@ const TransitionForm = ({originalStatus, onStatusChange, disabled }) => {
           value={taskStatuses.EM_ANDAMENTO}
           control={<Radio />}
           label={taskStatuses.EM_ANDAMENTO}
-          disabled={disabled ||  !allowedStatuses[1]}
+          disabled={disabled || !allowedStatuses[1]}
         />
         <FormControlLabel
           value={taskStatuses.CONCLUIDA}
           control={<Radio />}
           label={taskStatuses.CONCLUIDA}
-          disabled={disabled ||  !allowedStatuses[2]}
+          disabled={disabled || !allowedStatuses[2]}
         />
       </RadioGroup>
     </FormControl>
   );
 };
 
+const TaskInfo = ({ task }) => {
+
+  const formatRelativeTime = (date) => {
+    return formatDistanceToNow(new Date(date), { addSuffix: true, locale: pt });
+  };
+
+  return (
+    <Box>
+      <Typography>Tarefa criada {formatRelativeTime(task.createdAt)}</Typography>
+      {task.updatedAt && <Typography>Atualizada pela última vez {formatRelativeTime(task.updatedAt)}</Typography>}
+    </Box>
+  );
+};
 
 
 export default TaskViewEdit;

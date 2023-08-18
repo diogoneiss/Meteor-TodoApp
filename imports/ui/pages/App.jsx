@@ -64,12 +64,13 @@ const App = () => {
         {user ? (
           <Fragment>
             <TaskForm />
-
+          { /*
             <div className="filter">
               <button onClick={() => setHideCompleted(!hideCompleted)}>
                 {hideCompleted ? 'Show All' : 'Hide Completed'}
               </button>
             </div>
+            */}
 
             {isLoading && <CenteredLoading />}
 

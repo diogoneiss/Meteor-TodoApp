@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { TasksCollection } from '../db/TasksCollection';
 import { Log } from 'meteor/logging'
 import { taskStatuses } from '../models/taskModel';
@@ -48,24 +48,44 @@ Meteor.methods({
     TasksCollection.remove(taskId);
   },
 
-  'tasks.setIsChecked'(taskId, isChecked) {
-    check(taskId, String);
-    check(isChecked, Boolean);
- 
-    if (!this.userId) {
-      throw new Meteor.Error('Not authorized.');
-    }
+  'tasks.update'(updatedTask) {
+    //Duvida: como fazer para não precisar fazer essa verificação?
+    // tentei usar o Maybe que teoricamente aceita null, mas não funcionou
+    if (updatedTask.updatedAt === null) {
+      delete updatedTask.updatedAt;
+  }
 
-    const task = TasksCollection.findOne({ _id: taskId, userId: this.userId });
+    check(updatedTask, {
+      _id: String,
+      title: String,
+      description: String,
+      isPrivate: Boolean,
+      status: String,
+      createdAt: Date,
+      updatedAt: Match.Optional(Date),
+      userId: Match.Optional(String),
+      username: Match.Optional(String),
+    });
 
+    Log.debug(`atualizando tarefa: ${JSON.stringify(updatedTask)}`);
+
+    const task = TasksCollection.findOne(updatedTask._id);
     if (!task) {
-      throw new Meteor.Error('Access denied.');
+      throw new Meteor.Error('Task não encontrada');
     }
 
-    TasksCollection.update(taskId, {
+    if (task.userId !== this.userId) {
+      throw new Meteor.Error('Usuário não autorizado para edição');
+    }
+
+    TasksCollection.update(updatedTask._id, {
       $set: {
-        isChecked,
+        title: updatedTask.title,
+        description: updatedTask.description,
+        isPrivate: updatedTask.isPrivate,
+        status: updatedTask.status,
+        updatedAt: new Date(),
       },
     });
-  }
+  },
 });
