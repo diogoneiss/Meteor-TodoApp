@@ -45,7 +45,7 @@ export const TaskForm = () => {
                 <Typography variant='body1'>Inserir nova tarefa</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" maxWidth="xs" sx={{mb: "1rem"}}>
                     <form onSubmit={handleSubmit}>
                         <TextField
                             variant="outlined"

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 import { Accounts } from 'meteor/accounts-base';
-
+import { taskStatuses } from '../imports/models/taskModel';
 import '/imports/api/tasksMethods';
 import '/imports/api/tasksPublications';
 import '../imports/api/auth';
@@ -10,7 +10,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
+/* DUVIDA pq isso nao funciona?
+// Verificar variáveis de ambiente específicas
+if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_SECRET) {
+    throw new Error("GITHUB_CLIENT_ID ou GITHUB_SECRET não estão definidos no arquivo .env");
+}
+*/
 const SEED_USERNAME = 'meteorite';
 const SEED_PASSWORD = 'password';
 
@@ -19,6 +24,10 @@ const insertTask = (taskText, user) =>
     text: taskText,
     userId: user._id,
     createdAt: new Date(),
+    status: taskStatuses.CADASTRADA,
+    updatedAt: null,
+    username: user.username,
+    description: 'Sem descricao',
   });
 
 
