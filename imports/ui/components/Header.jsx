@@ -138,12 +138,14 @@ export default function MenuAppBar({ user }) {
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
+          {user && (
           <ListItem button onClick={() => {/* falta isso*/ }}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
             <ListItemText primary={`Conta - ${user.username}`} />
           </ListItem>
+          )}
         </List>
       </Drawer>
     </Box>

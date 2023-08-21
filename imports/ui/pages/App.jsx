@@ -5,40 +5,51 @@ import { TasksCollection } from '/imports/db/TasksCollection';
 import { Task } from '../Task';
 import { TaskForm } from '../TaskForm';
 import { LoginForm } from './LoginPage';
-import {Typography, Container, Box} from '@mui/material';
+import { Typography, Container, Box, TextField, FormControlLabel, Switch, Button } from '@mui/material';
 import CenteredLoading from '../components/CenteredLoading';
-
+import { taskStatuses } from '../../models/taskModel';
+import { TodoHeader } from './todoHeader';
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 
 const App = () => {
-  const [hideCompleted, setHideCompleted] = useState(false);
+  const [showCompleted, setShowCompleted] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+
+  const handleNextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
+  };
 
   const user = useTracker(() => Meteor.user());
-  console.log('user: ', user)
-
-  const hideCompletedFilter = { isChecked: { $ne: true } };
+  console.log(user);
 
   const userFilter = user ? { userId: user._id } : {};
 
-  const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
+  const pendingOnlyFilter = { ...{ status: { $in: [taskStatuses.CADASTRADA, taskStatuses.EM_ANDAMENTO] } }, ...userFilter };
 
   const { tasks, pendingTasksCount, isLoading } = useTracker(() => {
     const noDataAvailable = { tasks: [], pendingTasksCount: 0 };
     if (!Meteor.user()) {
       return noDataAvailable;
     }
-    const handler = Meteor.subscribe('tasks');
+
+    const handler = Meteor.subscribe('tasks', currentPage, searchQuery, showCompleted);
 
     if (!handler.ready()) {
       return { ...noDataAvailable, isLoading: true };
     }
 
-    const tasks = TasksCollection.find({},
-      {
-        sort: { createdAt: -1 },
-      }
-    ).fetch();
+    const tasks = TasksCollection.find({}).fetch();
 
     const pendingTasksCount = TasksCollection.find(pendingOnlyFilter).count();
 
@@ -49,21 +60,34 @@ const App = () => {
 
   return (
     <div className="app">
-      <Box marginBottom={3} sx={{ flexGrow: 1 }}>
-      <Typography align='center' variant="h3" sx={{ flexGrow: 1 }}>
-        📝️ To Do List
-        </Typography>
-         
-      <Typography align='center' variant="h5" sx={{ flexGrow: 1 }}>
-
-      {pendingTasksCount === 0 ? "Você não tem tarefas pendentes" : `Você tem ${pendingTasksCount} tarefas pendentes`}
-      </Typography>
-      </Box>
+      
 
       <div className="main">
-        {user ? (
-          <Fragment>
-            <TaskForm />
+        <Fragment>
+          <TodoHeader searchQuery={searchQuery} showCompleted={showCompleted} />
+          <TaskForm />
+          <Container maxWidth="sm">
+            <Box mt={2}>
+              <TextField
+                label="Search Tasks"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                sx={{ marginBottom: '1rem' }}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={showCompleted}
+                    onChange={() => setShowCompleted(!showCompleted)}
+                    color="primary"
+                  />
+                }
+                label="Mostrar completas"
+              />
+            </Box>
+          </Container>
           { /*
             <div className="filter">
               <button onClick={() => setHideCompleted(!hideCompleted)}>
@@ -72,21 +96,41 @@ const App = () => {
             </div>
             */}
 
-            {isLoading && <CenteredLoading />}
+          {isLoading && <CenteredLoading />}
 
-            <ul className="tasks">
-              {tasks.map(task => (
-                <Task
-                  key={task._id}
-                  task={task}
-                  onDeleteClick={deleteTask}
-                />
-              ))}
-            </ul>
-          </Fragment>
-        ) : (
-          <LoginForm />
-        )}
+          <ul className="tasks">
+            {tasks.map(task => (
+              <Task
+                key={task._id}
+                task={task}
+                onDeleteClick={deleteTask}
+              />
+            ))}
+          </ul>
+          <Box mt={3} display="flex" justifyContent="center" alignItems="center">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}>
+              Anterior
+            </Button>
+
+            <Typography variant="body1" sx={{ mx: 2 }}>
+              Página {currentPage}
+            </Typography>
+
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleNextPage}
+              disabled={tasks.length < 4}>
+              Próxima
+            </Button>
+          </Box>
+
+        </Fragment>
+
       </div>
 
     </div>

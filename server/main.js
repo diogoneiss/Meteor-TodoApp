@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from '/imports/db/TasksCollection';
+import { TasksCount } from '../imports/db/TasksCount';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 import { Accounts } from 'meteor/accounts-base';
 import { taskStatuses } from '../imports/models/taskModel';

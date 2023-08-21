@@ -1,9 +1,9 @@
 import React from 'react';
 import { CircularProgress, Box } from '@mui/material';
 
-function CenteredLoading() {
+function CenteredLoading({height = "40vh"}) {
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="40vh">
+    <Box display="flex" justifyContent="center" alignItems="center" height={height}>
       <CircularProgress />
     </Box>
   );
