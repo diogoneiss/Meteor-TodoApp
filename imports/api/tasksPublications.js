@@ -4,9 +4,16 @@ import { check } from 'meteor/check';
 import { Log } from 'meteor/logging'
 import { taskStatuses } from '../models/taskModel';
 import { Random } from 'meteor/random';
-//TODO extrair para um arquivo de constantes
-const TASKS_PER_PAGE = 4;
+import { TASKS_PER_PAGE } from '../constants';
 
+/**
+ * 
+ * @param {string} userId 
+ * @param {string} searchQuery 
+ * @param {boolean} showCompleted se devemos incluir tarefas concluídas
+ * @param {boolean} showOtherUsers se a busca deve incluir tarefas públicas
+ * @returns filtro para o mongodb
+ */
 const createCollectionFilters = (userId, searchQuery, showCompleted, showOtherUsers=false) => {
   const userFilters = showOtherUsers ? 
     {
@@ -27,18 +34,19 @@ const createCollectionFilters = (userId, searchQuery, showCompleted, showOtherUs
   };
 }
 
-
-
-
 Meteor.publish('tasks.count', function publishTasksCount(searchQuery = "", showCompleted = true) {
   check(searchQuery, String);
   
-  const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted);
+  const combinedFiltersAll = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
+  const combinedFiltersUser = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
 
-  const count = TasksCollection.find(combinedFilters).count();
+
+  const countAllTasks = TasksCollection.find(combinedFiltersAll).count();
+  const countUserTasks = TasksCollection.find(combinedFiltersUser).count();
+
 
   // Coleção virtual para contagem de tarefas
-  this.added('tasksCount', Random.id(), { count });
+  this.added('tasksCount', Random.id(), { countAllTasks, countUserTasks  });
 
   this.ready();
 

@@ -9,6 +9,7 @@ import { Typography, Container, Box, TextField, FormControlLabel, Switch, Button
 import CenteredLoading from '../components/CenteredLoading';
 import { taskStatuses } from '../../models/taskModel';
 import { TodoHeader } from './todoHeader';
+import { TASKS_PER_PAGE } from '../../constants';
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 
@@ -132,7 +133,7 @@ const App = () => {
               variant="outlined"
               color="primary"
               onClick={handleNextPage}
-              disabled={tasks.length < 4}>
+              disabled={tasks.length < TASKS_PER_PAGE}>
               Próxima
             </Button>
           </Box>
