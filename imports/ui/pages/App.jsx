@@ -14,7 +14,7 @@ const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 const App = () => {
   const [showCompleted, setShowCompleted] = useState(false);
-
+  const [showUserTasks, setShowUserTasks] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -37,8 +37,8 @@ const App = () => {
 
   const pendingOnlyFilter = { ...{ status: { $in: [taskStatuses.CADASTRADA, taskStatuses.EM_ANDAMENTO] } }, ...userFilter };
 
-  const { tasks, pendingTasksCount, isLoading } = useTracker(() => {
-    const noDataAvailable = { tasks: [], pendingTasksCount: 0 };
+  const { tasks, isLoading } = useTracker(() => {
+    const noDataAvailable = { tasks: [] };
     if (!Meteor.user()) {
       return noDataAvailable;
     }
@@ -51,12 +51,10 @@ const App = () => {
 
     const tasks = TasksCollection.find({}).fetch();
 
-    const pendingTasksCount = TasksCollection.find(pendingOnlyFilter).count();
-
-    return { tasks, pendingTasksCount };
+    return { tasks, isLoading: false };
   });
 
-
+  console.log("Tamanho do tasks: ", tasks.length)
 
   return (
     <div className="app">
@@ -69,7 +67,7 @@ const App = () => {
           <Container maxWidth="sm">
             <Box mt={2}>
               <TextField
-                label="Search Tasks"
+                label="Buscar tarefas"
                 variant="outlined"
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -85,6 +83,16 @@ const App = () => {
                   />
                 }
                 label="Mostrar completas"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={showUserTasks}
+                    onChange={() => setShowUserTasks(!showUserTasks)}
+                    color="primary"
+                  />
+                }
+                label="Mostrar apenas minhas tarefas"
               />
             </Box>
           </Container>

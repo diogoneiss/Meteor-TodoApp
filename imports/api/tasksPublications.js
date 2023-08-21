@@ -4,30 +4,29 @@ import { check } from 'meteor/check';
 import { Log } from 'meteor/logging'
 import { taskStatuses } from '../models/taskModel';
 import { Random } from 'meteor/random';
+//TODO extrair para um arquivo de constantes
 const TASKS_PER_PAGE = 4;
 
-const createCollectionFilters = (userId, searchQuery, showCompleted) => {
-  const basicFilters = [
+const createCollectionFilters = (userId, searchQuery, showCompleted, showOtherUsers=false) => {
+  const userFilters = showOtherUsers ? 
     {
       $or: [
-        { userId: userId },
+        { userId },
         { isPrivate: false }
       ]
-    }
-  ];
+    } : 
+    { userId };
 
   const searchFilter = searchQuery ? { title: { $regex: searchQuery, $options: 'i' } } : {};
-
-  const statusFilter = !showCompleted ?
+  
+  const statusFilter = !showCompleted ? 
     { status: { $in: [taskStatuses.CADASTRADA, taskStatuses.EM_ANDAMENTO] } } : {};
 
-  const combinedFilters = {
-    $and: [...basicFilters, searchFilter, statusFilter]
+  return {
+    $and: [userFilters, searchFilter, statusFilter]
   };
-
-  return combinedFilters;
-
 }
+
 
 
 
@@ -48,6 +47,7 @@ Meteor.publish('tasks.count', function publishTasksCount(searchQuery = "", showC
 Meteor.publish('tasks', function publishTasks(page = 1, searchQuery = "", showCompleted = true) {
 
   const skip = (page - 1) * TASKS_PER_PAGE;
+  console.log(`skip: ${skip}`)
 
   const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted);
 
