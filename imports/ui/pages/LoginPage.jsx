@@ -5,8 +5,9 @@ import { Button, TextField, Paper, Typography, Container, Alert, Box, Link as Mu
 import { LoginWithGithub } from '../components/LoginWithGithub';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
-
-export const LoginForm = ({user}) => {
+import AlertComponent
+  from '../components/AlertComponent';
+export const LoginForm = ({ user }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -21,6 +22,7 @@ export const LoginForm = ({user}) => {
   const submit = (e) => {
     e.preventDefault();
     setError(null); // Clear previous error
+   
     Meteor.loginWithPassword(username, password, (err) => {
       if (err) {
         setError(err.reason);
@@ -28,13 +30,15 @@ export const LoginForm = ({user}) => {
         navigate('/');
       }
     });
+    
   };
 
   return (
     <Container component="main" maxWidth="xs">
+      
       <Paper elevation={3} sx={{ padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h5">Login</Typography>
-        
+
         <Box sx={{ mt: 3, mb: 3 }}>
           <LoginWithGithub style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
         </Box>
@@ -46,7 +50,7 @@ export const LoginForm = ({user}) => {
             margin="normal"
             required
             fullWidth
-            label="Username"
+            label="Email ou username"
             name="username"
             autoComplete="username"
             autoFocus

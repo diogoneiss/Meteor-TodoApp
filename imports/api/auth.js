@@ -35,7 +35,7 @@ Meteor.methods({
       username: Match.Optional(String) 
     });
 
-    Log.debug(`users.register data: ${JSON.stringify(data)}`);
+    Log.debug(`users.register name: ${data.name}`);
 
     // Se já está logado só atualizamos o perfil
     if (this.userId) {
@@ -55,6 +55,7 @@ Meteor.methods({
     const userId = Accounts.createUser({
       username: data.username,
       password: data.password,
+      email: data.email,
       profile: {
         nome: data.name,
         dataDeNascimento: data.dob,

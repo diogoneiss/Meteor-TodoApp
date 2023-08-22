@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import CenteredContainer from '../components/CenteredContainer';
 import { AccountStatus, getAccountStatus } from '../utils/accountStatus'
 import AccountFields from './AccountFields';
-
+import AlertComponent from '../components/AlertComponent';
 const FormHeader = ({ accountStatus }) => (
   <Box mb={2}>
     <Typography align='center' variant='h3' gutterBottom>Cadastro de usuário</Typography>
@@ -26,7 +26,7 @@ const FormHeader = ({ accountStatus }) => (
 
 export const SignupForm = ({ user, accountStatus }) => {
 
-
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const redirectAfterSignup = () => {
@@ -64,8 +64,9 @@ export const SignupForm = ({ user, accountStatus }) => {
   };
 
   return (
-    <Container>
-      <Container my={2} component="main" maxWidth="md">
+    <Container >
+      <Container sx={{my: "2rem"}} component="main" maxWidth="md">
+        {error && <AlertComponent severity="error" message={error} />}
         <FormHeader accountStatus={accountStatus} />
         <AccountFields hideRegister={false} onSubmit={submit} user={user} />
       </Container>

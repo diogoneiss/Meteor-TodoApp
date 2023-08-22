@@ -1,4 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box, Container, Alert, Typography } from '@mui/material';
+
+const PhotoUploadBox = ({ photo, onPhotoChange }) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+      <input type="file" required accept="image/*" onChange={onPhotoChange} />
+      {photo && <img src={photo} alt="Preview" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
+    </Box>
+  );
+};
+
+
 
 const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false }) => {
   const [name, setName] = useState(user?.profile?.nome || '');
@@ -47,8 +59,8 @@ const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false }) => {
     }}>
       {!isGithubOAuth && !hideRegister && (
         <>
-          <TextField fullWidth margin="normal" required label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
           <TextField fullWidth margin="normal" required label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <TextField fullWidth margin="normal" required label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
           <TextField fullWidth margin="normal" required type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </>
       )}
@@ -62,7 +74,10 @@ const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false }) => {
         </Select>
       </FormControl>
       <TextField fullWidth margin="normal" required label="Empresa que trabalha" value={company} onChange={(e) => setCompany(e.target.value)} />
-      <input type="file" required accept="image/*" onChange={handlePhotoChange} />
+      <PhotoUploadBox photo={photo} onPhotoChange={handlePhotoChange} />
+
+
+      <Button sx={{mt: "1rem"}} type="submit" variant="contained" color="primary" fullWidth>Cadastrar</Button>
     </form>
   );
 };
