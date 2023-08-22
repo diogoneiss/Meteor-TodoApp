@@ -12,8 +12,9 @@ import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../Task';
+import AccountFields from './AccountFields';
 
-export function AccountEdit({user}) {
+export function AccountEdit({ user }) {
   const [userFields, setUserFields] = useState(user);
   const [isEditMode, setIsEditMode] = useState(false);
   const [error, setError] = useState(null);
@@ -32,14 +33,19 @@ export function AccountEdit({user}) {
   };
 
   const resetTask = () => {
+    let userWithoutPhoto = { ...userFields };
+    delete userWithoutPhoto.photo;
+
+    let originalUserWithoutPhoto = { ...user };
+    delete originalUserWithoutPhoto.photo;
+
+    console.log(`resetando usuario! era ${JSON.stringify(userWithoutPhoto)} e agora é ${JSON.stringify(originalUserWithoutPhoto)}`)
     setUserFields(user);
   }
 
+  //Duvida: preciso disso?
   useEffect(() => {
-    setLoading(true);
-
     setUserFields(user);
-
   }, [user]);
 
 
@@ -49,10 +55,10 @@ export function AccountEdit({user}) {
 
 
   const handleCancelClick = () => {
-    
+
     setIsEditMode(false);
     resetTask();
-    
+
   };
 
   const handleSubmit = (event) => {
@@ -73,78 +79,34 @@ export function AccountEdit({user}) {
     });
   };
 
-
-
   return (
     <Container component="main" maxWidth="xs">
       {error && <ErrorDisplay message={error} />}
-      <TaskInfo task={userFields} />
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Título"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={userFields.title}
-          disabled={!isEditMode}
-          onChange={(e) => setUserFields({ ...userFields, title: e.target.value })}
-        />
-        <TextField
-          label="Descrição"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={userFields.description}
-          disabled={!isEditMode}
-          onChange={(e) => setUserFields({ ...userFields, description: e.target.value })}
-        />
-        {/*
-        Detalhe importante: usamos o valor da task original pois o valor da task atual pode ter sido alterado pelo usuário, mas ainda não foi salvo no banco de dados, então a regra de negócio pode ser violada
-        */}
-        <TransitionForm disabled={!isEditMode} originalStatus={originalUser.status} originalTask={originalUser} onStatusChange={handleStatusChange} />
+      <AccountFields hideRegister={true} onSubmit={handleSubmit} user={userFields} disabled={!isEditMode} />
 
-
-        <FormControlLabel
-          control={<Checkbox checked={userFields.isPrivate} disabled={!isEditMode} onChange={(e) =>
-            setUserFields({ ...userFields, isPrivate: e.target.checked })}
-          />}
-          label="Tarefa privada?"
-        />
-
-        {!isEditMode ?
-          <>
-            <Button
-              sx={{ my: '1rem' }}
-              variant="contained"
-              fullWidth
-              onClick={()=> setIsEditMode(true)}
-              disabled={Meteor.userId() !== userFields.userId}>
-              Editar
-            </Button>
-            {!isCreator &&
-            <Typography variant="caption" display="block" textAlign="center" mt={1}>
-              Você não pode editar essa tarefa pois não é o criador dela
-            </Typography>
-}
-          </>
-          :
+      {!isEditMode ?
+        <>
           <Button
             sx={{ my: '1rem' }}
-            variant="outlined"
+            variant="contained"
             fullWidth
-            onClick={handleCancelClick}
-            disabled={Meteor.userId() !== userFields.userId}
+            onClick={() => setIsEditMode(true)}
           >
-            Cancelar
+            Editar
           </Button>
-        }
 
-        {isEditMode && (
-          <Button sx={{ my: '1rem' }} type="submit" fullWidth variant="contained">
-            Atualizar
-          </Button>
-        )}
-      </form>
+        </>
+        :
+        <Button
+          sx={{ my: '1rem' }}
+          variant="outlined"
+          fullWidth
+          onClick={handleCancelClick}
+        >
+          Cancelar
+        </Button>
+      }
+
       <Container maxWidth="sm" >
         {feedback &&
           <ErrorDisplay message={feedback} severity='success' />

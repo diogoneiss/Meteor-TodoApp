@@ -16,33 +16,33 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
+import StyledLink from './StyledLink';
 import { useLocation, useNavigate } from "react-router-dom";
 
 const UserPhoto = ({ user }) => {
   console.log("user: ", user)
   return (
-  <ListItemIcon>
-    {user.profile.foto ? (
-      <img
-        src={user.profile.foto}
-        alt={user.username}
-        style={{
-          width: '24px',
-          height: '24px',
-          objectFit: 'cover',
-        }}
-      />
-    ) : (
-      <IconButton
-        size="large"
-        aria-label="account of current user"
-        color="inherit"
-      >
-        <AccountCircle />
-      </IconButton>
-    )}
-  </ListItemIcon>
+    <ListItemIcon>
+      {user.profile.foto ? (
+        <img
+          src={user.profile.foto}
+          alt={user.username}
+          style={{
+            width: '24px',
+            height: '24px',
+            objectFit: 'cover',
+          }}
+        />
+      ) : (
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+      )}
+    </ListItemIcon>
   );
 
 }
@@ -148,7 +148,9 @@ export default function MenuAppBar({ user }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleMyAccount}>Minha conta</MenuItem>
+                <MenuItem >
+                  <StyledLink to="/account">Minha conta</StyledLink>
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
@@ -164,9 +166,12 @@ export default function MenuAppBar({ user }) {
             <ListItemText primary="Home" />
           </ListItem>
           {user && (
-            <ListItem button onClick={() => {/* falta isso*/ }}>
-               <UserPhoto user={user} />
-              <ListItemText primary={`Conta - ${user.username}`} />
+            <ListItem button>
+              <UserPhoto user={user} />
+              <StyledLink to="/account"> 
+                <ListItemText primary={`Conta - ${user.username}`} />
+              </StyledLink>
+
             </ListItem>
           )}
         </List>

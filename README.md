@@ -13,3 +13,7 @@ GITHUB_SECRET=
 - [ ] Publicação do projeto no meteor cloud
 - [ ] Busca (já olhei como fazer)
 - [ ] Filtro de tarefas concluídas
+
+## Dúvidas
+
+* Como fazer a aplicação manter alguma noção de "localização" ao atualizar a página, sem mandar direto pra home?

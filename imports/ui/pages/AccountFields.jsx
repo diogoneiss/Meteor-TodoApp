@@ -28,7 +28,6 @@ const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false, disabled=fa
 
   const isGithubOAuth = user && user.profile && user.profile.oauth === 'github';
   
-  //TODO: mostrar foto enviada em miniatura
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();

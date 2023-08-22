@@ -10,7 +10,7 @@ import { Meteor } from 'meteor/meteor';
 import TaskDetail from './pages/TaskDetail';
 import { useTracker } from 'meteor/react-meteor-data';
 import {AccountStatus, getAccountStatus} from './utils/accountStatus'
-
+import AccountEdit from './pages/AccountEdit';
 import {
   BrowserRouter,
   Routes,
@@ -54,6 +54,7 @@ const Home = () => {
                 <Route path="/app" element={<App />} />
                 <Route path="/" element={<WelcomePage  />} />  
                 <Route path="/app/:taskId" element={<TaskDetail/>} />
+                <Route path="/account" element={<AccountEdit user={user} />} />
               </Routes>
             </ProtectedRoute>
           }
