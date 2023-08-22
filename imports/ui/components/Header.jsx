@@ -19,6 +19,35 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useLocation, useNavigate } from "react-router-dom";
 
+const UserPhoto = ({ user }) => {
+  console.log("user: ", user)
+  return (
+  <ListItemIcon>
+    {user.profile.foto ? (
+      <img
+        src={user.profile.foto}
+        alt={user.username}
+        style={{
+          width: '24px',
+          height: '24px',
+          objectFit: 'cover',
+        }}
+      />
+    ) : (
+      <IconButton
+        size="large"
+        aria-label="account of current user"
+        color="inherit"
+      >
+        <AccountCircle />
+      </IconButton>
+    )}
+  </ListItemIcon>
+  );
+
+}
+
+
 export default function MenuAppBar({ user }) {
 
   const [title, setTitle] = React.useState("App");
@@ -89,13 +118,9 @@ export default function MenuAppBar({ user }) {
               <Box aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu} display="flex" alignItems="center">
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
+
+                <UserPhoto user={user} />
+
                 <Typography
                   sx={{
                     cursor: 'pointer',
@@ -139,12 +164,10 @@ export default function MenuAppBar({ user }) {
             <ListItemText primary="Home" />
           </ListItem>
           {user && (
-          <ListItem button onClick={() => {/* falta isso*/ }}>
-            <ListItemIcon>
-              <AccountCircle />
-            </ListItemIcon>
-            <ListItemText primary={`Conta - ${user.username}`} />
-          </ListItem>
+            <ListItem button onClick={() => {/* falta isso*/ }}>
+               <UserPhoto user={user} />
+              <ListItemText primary={`Conta - ${user.username}`} />
+            </ListItem>
           )}
         </List>
       </Drawer>

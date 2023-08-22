@@ -12,7 +12,7 @@ const PhotoUploadBox = ({ photo, onPhotoChange }) => {
 
 
 
-const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false }) => {
+const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false, disabled=false }) => {
   const [name, setName] = useState(user?.profile?.nome || '');
   const [dob, setDob] = useState(user?.profile?.dataDeNascimento || '');
   const [gender, setGender] = useState(user?.profile?.sexo || '');
@@ -64,20 +64,20 @@ const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false }) => {
           <TextField fullWidth margin="normal" required type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </>
       )}
-      <TextField fullWidth margin="normal" required label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
-      <TextField fullWidth margin="normal" required type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
-      <FormControl fullWidth margin="normal">
+      <TextField disabled={disabled} fullWidth margin="normal" required label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
+      <TextField disabled={disabled} fullWidth margin="normal" required type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
+      <FormControl disabled={disabled} fullWidth margin="normal">
         <InputLabel sx={{ backgroundColor: 'white', paddingLeft: 2, paddingRight: 2 }}>Sexo</InputLabel>
         <Select value={gender} required onChange={(e) => setGender(e.target.value)}>
           <MenuItem value={'male'}>Masculino</MenuItem>
           <MenuItem value={'female'}>Feminino</MenuItem>
         </Select>
       </FormControl>
-      <TextField fullWidth margin="normal" required label="Empresa que trabalha" value={company} onChange={(e) => setCompany(e.target.value)} />
-      <PhotoUploadBox photo={photo} onPhotoChange={handlePhotoChange} />
+      <TextField disabled={disabled} fullWidth margin="normal" required label="Empresa que trabalha" value={company} onChange={(e) => setCompany(e.target.value)} />
+      <PhotoUploadBox disabled={disabled} photo={photo} onPhotoChange={handlePhotoChange} />
 
-
-      <Button sx={{mt: "1rem"}} type="submit" variant="contained" color="primary" fullWidth>Cadastrar</Button>
+      {!disabled && <Button sx={{mt: "1rem"}} type="submit" variant="contained" color="primary" fullWidth>Salvar</Button>}
+      
     </form>
   );
 };
