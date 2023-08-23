@@ -17,63 +17,32 @@ import {userToState, AccountFields} from './AccountFields';
 export function AccountEdit({ user }) {
 
 
-  
-
-  const [userFields, setUserFields] = useState(userToState(user));
-  const [originalFields, setOriginalFields] = useState(userToState(user));
-
   const [isEditMode, setIsEditMode] = useState(false);
   const [error, setError] = useState(null);
   const [feedback, setFeedback] = useState(null);
-  const [loading, setLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
   const handleGoBack = () => {
     navigate(-1);
   };
-
-  const resetTask = () => {
-    let originalUser = userToState(user);
-    console.log(originalUser)
-    console.log(`resetando usuario! empresa é ${userFields.company} e original é ${originalUser.company} `)
-
-    setUserFields(originalFields);
+  const handleEditChange = () => {
+    setIsEditMode(!isEditMode);
   }
 
-  //Duvida: preciso disso?
-  /*
-  useEffect(() => {
-    setUserFields(user);
-  }, [user]);
-*/
-
-  if (error) return <ErrorDisplay message={error.error} severity='error' />;
-  if (loading || !userFields) return <CenteredLoading />;
-
-
-
-  const handleCancelClick = () => {
-
-    setIsEditMode(false);
-    resetTask();
-
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const handleSubmit = (userFields) => {
+    
     //TODO: criar metodo de atualizacao
-    Meteor.call('tasks.update', userFields, (error) => {
-      if (error) {
-        console.error(error);
-        setError(error.error);
+    console.log("updated user data form subcomponent ", userFields)
+
+    Meteor.call('users.register', userFields, (err, res) => {
+      if (err) {
+        setError(err.message)
         setFeedback(null);
       } else {
-        setIsEditMode(false);
         setError(null);
-        setFeedback('Tarefa atualizada com sucesso!');
-        setOriginalUser(userFields);
+        setFeedback("Dados atualizados com sucesso!");
       }
     });
   };
@@ -81,7 +50,8 @@ export function AccountEdit({ user }) {
   return (
     <Container component="main" maxWidth="xs">
       {error && <ErrorDisplay message={error} />}
-      <AccountFields hideRegister={true} onSubmit={handleSubmit} formData={userFields} disabled={!isEditMode} />
+
+      <AccountFields hideRegister={true} onSubmit={handleSubmit} formData={user} disabled={!isEditMode} />
 
       {!isEditMode ?
         <>
@@ -89,7 +59,7 @@ export function AccountEdit({ user }) {
             sx={{ my: '1rem' }}
             variant="contained"
             fullWidth
-            onClick={() => setIsEditMode(true)}
+            onClick={handleEditChange}
           >
             Editar
           </Button>
@@ -100,9 +70,9 @@ export function AccountEdit({ user }) {
           sx={{ my: '1rem' }}
           variant="outlined"
           fullWidth
-          onClick={handleCancelClick}
+          onClick={handleEditChange}
         >
-          Cancelar
+          Sair da edição
         </Button>
       }
 
@@ -125,8 +95,5 @@ export function AccountEdit({ user }) {
     </Container>
   );
 }
-
-
-
 
 export default AccountEdit;

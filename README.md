@@ -7,12 +7,9 @@ GITHUB_CLIENT_ID=
 GITHUB_SECRET=
 ```
 
-## Pendências
+## Melhorias
 
-- [ ] Dados do usuário no cabeçalho e drawer
-- [ ] Publicação do projeto no meteor cloud
-- [ ] Busca (já olhei como fazer)
-- [ ] Filtro de tarefas concluídas
+* Extrair componente reutilizável pro formulário, com botão de editar, cancelar e readonly.
 
 ## Dúvidas
 

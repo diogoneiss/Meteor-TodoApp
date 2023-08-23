@@ -69,7 +69,7 @@ export const SignupForm = ({ user, accountStatus }) => {
       <Container sx={{my: "2rem"}} component="main" maxWidth="md">
         {error && <AlertComponent severity="error" message={error} />}
         <FormHeader accountStatus={accountStatus} />
-        <AccountFields hideRegister={isGithubOAuth} onSubmit={submit} formData={userToState(user)} />
+        <AccountFields hideRegister={isGithubOAuth} onSubmit={submit} formData={user} />
       </Container>
     </Container>
   );

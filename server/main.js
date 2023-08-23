@@ -4,9 +4,9 @@ import { TasksCount } from '../imports/db/TasksCount';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 import { Accounts } from 'meteor/accounts-base';
 import { taskStatuses } from '../imports/models/taskModel';
-import '/imports/api/tasksMethods';
-import '/imports/api/tasksPublications';
-import '../imports/api/auth';
+import '../imports/api/tasksMethods';
+import '../imports/api/tasksPublications';
+import '../imports/api/accountMethods';
 import dotenv from 'dotenv';
 
 dotenv.config();

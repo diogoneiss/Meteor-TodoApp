@@ -36,6 +36,7 @@ Meteor.methods({
     });
 
     Log.debug(`users.register name: ${data.name}`);
+    
 
     // Se já está logado só atualizamos o perfil
     if (this.userId) {
@@ -77,7 +78,6 @@ Meteor.methods({
 
     const user = Meteor.users.findOne(this.userId, { fields: { 'profile': 1 } });
 
-    // Add a check for each required field in the profile
     const hasAllFields = user &&
       user.profile &&
       user.profile.nome &&

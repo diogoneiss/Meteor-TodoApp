@@ -4,7 +4,7 @@ import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box, Cont
 const PhotoUploadBox = ({ photo, onPhotoChange }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-      <input type="file" required accept="image/*" onChange={onPhotoChange} />
+      <input type="file" required={!photo} accept="image/*" onChange={onPhotoChange} />
       {photo && <img src={photo} alt="Preview" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
     </Box>
   );
@@ -25,20 +25,16 @@ export function userToState(user) {
 }
 export const AccountFields = ({ formData, onLoad, onSubmit, hideRegister = false, disabled = false }) => {
 
-  const [fields, setFields] = useState(formData);
-
-  console.log("Data inside AccountFields");
-  console.log(fields)
-
+  const [fields, setFields] = useState(userToState(formData));
+  
   useEffect(() => {
-    setFields(formData);
+    setFields(userToState(formData));
   }, [formData]);
 
+  // Se necessário especificar uma chamada de função antes de carregar o formulário
   useEffect(() => {
     if (onLoad) onLoad();
   }, [onLoad]);
-
-
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -56,6 +52,7 @@ export const AccountFields = ({ formData, onLoad, onSubmit, hideRegister = false
   const handleChange = (field, value) => {
     setFields(prevFields => ({ ...prevFields, [field]: value }));
   };
+
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
@@ -69,10 +66,10 @@ export const AccountFields = ({ formData, onLoad, onSubmit, hideRegister = false
         </>
       )}
       <TextField disabled={disabled} fullWidth margin="normal" required label="Nome" value={fields.name} onChange={(e) => handleChange('name', e.target.value)} />
-      <TextField disabled={disabled} fullWidth margin="normal" required type="date" value={fields.dob} onChange={(e) => handleChange('dob', e.target.value)} />
+      <TextField disabled={disabled} InputLabelProps={{ shrink: true }} fullWidth margin="normal" required label="Data de nascimento" type="date" value={fields.dob} onChange={(e) => handleChange('dob', e.target.value)} />
       <FormControl disabled={disabled} fullWidth margin="normal">
         <InputLabel sx={{ backgroundColor: 'white', paddingLeft: 2, paddingRight: 2 }}>Sexo</InputLabel>
-        <Select value={fields.gender} required onChange={(e) => handleChange('gender', e.target.value)}>
+        <Select value={fields.gender || 'male'} required onChange={(e) => handleChange('gender', e.target.value)}>
           <MenuItem value={'male'}>Masculino</MenuItem>
           <MenuItem value={'female'}>Feminino</MenuItem>
         </Select>
