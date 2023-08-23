@@ -19,6 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import StyledLink from './StyledLink';
 import { useLocation, useNavigate } from "react-router-dom";
 
+import ResponsiveTypography from './ResponsiveTypography';
 const UserPhoto = ({ user }) => {
   console.log("user: ", user)
   return (
@@ -89,10 +90,6 @@ export default function MenuAppBar({ user }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleMyAccount = () => {
-    navigate("/account");
-  }
 
 
   return (

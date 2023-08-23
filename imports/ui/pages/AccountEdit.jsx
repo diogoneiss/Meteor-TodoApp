@@ -33,9 +33,6 @@ export function AccountEdit({ user }) {
 
   const handleSubmit = (userFields) => {
     
-    //TODO: criar metodo de atualizacao
-    console.log("updated user data form subcomponent ", userFields)
-
     Meteor.call('users.register', userFields, (err, res) => {
       if (err) {
         setError(err.message)
@@ -49,6 +46,9 @@ export function AccountEdit({ user }) {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Typography variant="h4" align="center" sx={{ my: '1rem' }}>
+        Editar dados de cadastro
+      </Typography>
       {error && <ErrorDisplay message={error} />}
 
       <AccountFields hideRegister={true} onSubmit={handleSubmit} formData={user} disabled={!isEditMode} />

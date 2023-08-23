@@ -24,18 +24,22 @@ const WelcomePage = () => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         height: '60vh',
+        marginTop: '1rem',
+        marginBottom: '3rem',
       }}
     >
       {isLoading ?
         <CenteredLoading />
         :
         <Box>
+          
+      
           <Typography variant="h3" align="center" gutterBottom>
             Informações gerais das {tasksCount} tarefas
           </Typography>
-          <Grid container spacing={3} style={{ flex: '1', alignItems: 'center' }}>
+          
+          <Grid container spacing={3} style={{ flex: '1', alignItems: 'center', marginBottom: '3rem' }}>
             {boxes.map((box, index) => (
               <Grid item xs={6} key={index}>
                 <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>

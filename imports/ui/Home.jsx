@@ -16,8 +16,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-
-
+import Footer from './components/Footer';
+import theme from './theme/createTheme';
+import { ThemeProvider } from '@mui/material/styles';
 
 const Home = () => {
 
@@ -39,8 +40,10 @@ const Home = () => {
 }, [user]);
 
 
-
   return (
+    <ThemeProvider theme={theme}>
+
+
     <BrowserRouter>
       <Header user={user} />
       <Routes>
@@ -60,8 +63,9 @@ const Home = () => {
           }
         />
       </Routes>
-
+      <Footer />
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

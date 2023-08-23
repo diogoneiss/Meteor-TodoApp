@@ -4,6 +4,7 @@ import CenteredLoading from '../components/CenteredLoading';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Box, Typography } from '@mui/material';
 import useTaskCounts from '../utils/taskCountHook';
+import ResponsiveTypography from '../components/ResponsiveTypography';
 export const TodoHeader = ({ showCompleted, searchQuery, userTasksCount }) => {
 
     const createTitle = () => {

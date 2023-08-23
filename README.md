@@ -9,6 +9,7 @@ GITHUB_SECRET=
 
 ## Melhorias
 
+* Implementar footer simples
 * Extrair componente reutilizável pro formulário, com botão de editar, cancelar e readonly.
 
 ## Dúvidas
