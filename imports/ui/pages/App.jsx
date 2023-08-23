@@ -10,6 +10,9 @@ import CenteredLoading from '../components/CenteredLoading';
 import { taskStatuses } from '../../models/taskModel';
 import { TodoHeader } from './todoHeader';
 import { TASKS_PER_PAGE } from '../../constants';
+import useTaskCounts from '../utils/taskCountHook';
+
+
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 
@@ -23,7 +26,6 @@ const App = () => {
     setSearchQuery(event.target.value);
   };
 
-
   const handleNextPage = () => {
     setCurrentPage(prevPage => prevPage + 1);
   };
@@ -31,12 +33,14 @@ const App = () => {
     setCurrentPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
   };
 
-  const user = useTracker(() => Meteor.user());
-  console.log(user);
+  
+  const taskCounts = useTaskCounts(searchQuery, showCompleted);
+  
+  const {totalTaskCount, userTasksCount, _} = taskCounts;
 
-  const userFilter = user ? { userId: user._id } : {};
 
-  const pendingOnlyFilter = { ...{ status: { $in: [taskStatuses.CADASTRADA, taskStatuses.EM_ANDAMENTO] } }, ...userFilter };
+  const totalPages = Math.ceil(totalTaskCount / TASKS_PER_PAGE);
+  const existsNextPage =  currentPage < totalPages
 
   const { tasks, isLoading } = useTracker(() => {
     const noDataAvailable = { tasks: [] };
@@ -63,7 +67,7 @@ const App = () => {
 
       <div className="main">
         <Fragment>
-          <TodoHeader searchQuery={searchQuery} showCompleted={showCompleted} />
+          <TodoHeader searchQuery={searchQuery} showCompleted={showCompleted} userTasksCount={userTasksCount} />
           <TaskForm />
           <Container maxWidth="sm">
             <Box mt={2}>
@@ -133,7 +137,7 @@ const App = () => {
               variant="outlined"
               color="primary"
               onClick={handleNextPage}
-              disabled={tasks.length < TASKS_PER_PAGE}>
+              disabled={!existsNextPage}>
               Próxima
             </Button>
           </Box>

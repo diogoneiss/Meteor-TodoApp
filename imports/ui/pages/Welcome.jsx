@@ -5,50 +5,14 @@ import { taskStatuses } from '../../models/taskModel';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import CenteredLoading from '../components/CenteredLoading';
-import {ArrowForward} from '@mui/icons-material';
+import { ArrowForward } from '@mui/icons-material';
+import useStatusCount from '../utils/StatusCountHook';
+
 const WelcomePage = () => {
-  const pendingOnlyFilter = { status: taskStatuses.EM_ANDAMENTO };
-  const doingFilter = { status: taskStatuses.CADASTRADA };
-  const completedFilter = { status: taskStatuses.CONCLUIDA };
 
-  console.log("pendingOnlyFilter: ", pendingOnlyFilter)
-
-  const { tasksCount, pendingTasksCount, doingTasksCount, completedTasksCount, isLoading } = useTracker(() => {
-
-    const noDataAvailable = {
-      tasksCount: 0,
-      pendingTasksCount: 0,
-      doingTasksCount: 0,
-      completedTasksCount: 0
-    };
-
-    const handler = Meteor.subscribe('tasks');
-
-    if (!handler.ready()) {
-      return { ...noDataAvailable, isLoading: true };
-    }
-
-    const tasks = TasksCollection.find({},
-      {
-        sort: { createdAt: -1 },
-      }
-    ).fetch();
-
-    const tasksCount = tasks.length;
-    console.log('tasksCount: ', tasksCount)
-
-    const pendingTasksCount = TasksCollection.find(pendingOnlyFilter).count();
-    console.log("Tarefas pendentes: ", pendingTasksCount)
-    const doingTasksCount = TasksCollection.find(doingFilter).count();
-    const completedTasksCount = TasksCollection.find(completedFilter).count();
-
-    const dados = { tasksCount, pendingTasksCount, doingTasksCount, completedTasksCount }
-
-    //console.log(dados)
-    return dados;
-  });
-
-
+  const countData = useStatusCount();
+ 
+  const [tasksCount, pendingTasksCount, doingTasksCount, completedTasksCount, isLoading] = Object.values(countData);
   const boxes = [
     { subtitle: 'Cadastradas', number: pendingTasksCount },
     { subtitle: 'Pendentes', number: doingTasksCount },
@@ -61,7 +25,7 @@ const WelcomePage = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        height: '60vh', 
+        height: '60vh',
       }}
     >
       {isLoading ?

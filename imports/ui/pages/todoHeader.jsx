@@ -1,27 +1,19 @@
 import React from 'react';
 import { TasksCount } from '../../db/TasksCount';
-import CenteredLoading from '../components/CenteredLoading'; 
+import CenteredLoading from '../components/CenteredLoading';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Box, Typography } from '@mui/material';	
-
-export const TodoHeader = ({ showCompleted, searchQuery }) => {
-
-    const { tasksCount, isLoading } = useTracker(() => {
-        const handle = Meteor.subscribe('tasks.count', searchQuery, showCompleted);
-        if (!handle.ready()) {
-            return { tasksCount: 0, isLoading: true };
-        }
-        const countDoc = TasksCount.findOne();
-
-        return { tasksCount: countDoc ? countDoc.count : 0, isLoading: false };
-    });
+import { Box, Typography } from '@mui/material';
+import useTaskCounts from '../utils/taskCountHook';
+export const TodoHeader = ({ showCompleted, searchQuery, userTasksCount }) => {
 
     const createTitle = () => {
-
-        if (tasksCount === 0) {
+        if (userTasksCount === undefined) {
+            return "Carregando..";
+        }
+        else if (userTasksCount === 0) {
             return "Você não tem tarefas pendentes";
         }
-        let title = `Você tem ${tasksCount} tarefas`;
+        let title = `Você tem ${userTasksCount} tarefas`;
 
         if (showCompleted) {
             title += " totais, incluindo as concluídas";
@@ -43,13 +35,10 @@ export const TodoHeader = ({ showCompleted, searchQuery }) => {
             📝️ Lista de tarefas
         </Typography>
 
-        {isLoading ?
-            <CenteredLoading height='5vh' />
-            :
-            <Typography align='center' variant="h5" sx={{ flexGrow: 1 }}>
-                {createTitle()}
-            </Typography>
-        }
+        <Typography align='center' variant="h5" sx={{ flexGrow: 1 }}>
+            {createTitle()}
+        </Typography>
+
     </Box>);
 
 };

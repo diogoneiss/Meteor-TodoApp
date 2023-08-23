@@ -27,37 +27,56 @@ const createCollectionFilters = (userId, searchQuery, showCompleted, showOtherUs
   const searchFilter = searchQuery ? { title: { $regex: searchQuery, $options: 'i' } } : {};
   
   const statusFilter = !showCompleted ? 
-    { status: { $in: [taskStatuses.CADASTRADA, taskStatuses.EM_ANDAMENTO] } } : {};
+    { status: { $ne:taskStatuses.CONCLUIDA }} : {};
 
   return {
     $and: [userFilters, searchFilter, statusFilter]
   };
 }
 
+
 Meteor.publish('tasks.count', function publishTasksCount(searchQuery = "", showCompleted = true) {
   check(searchQuery, String);
   
-  const combinedFiltersAll = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
-  const combinedFiltersUser = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
+  const getCountForFilters = (forAllUsers = true) => {
+    const filters = createCollectionFilters(this.userId, searchQuery, showCompleted, forAllUsers);
+    return TasksCollection.find(filters).count();
+  };
 
-
-  const countAllTasks = TasksCollection.find(combinedFiltersAll).count();
-  const countUserTasks = TasksCollection.find(combinedFiltersUser).count();
-
+  const countData = {
+    countAllTasks: getCountForFilters(true),
+    countUserTasks: getCountForFilters(false)
+  };
 
   // Coleção virtual para contagem de tarefas
-  this.added('tasksCount', Random.id(), { countAllTasks, countUserTasks  });
+  this.added('tasksCount', Random.id(), countData);
 
   this.ready();
 
 });
+
+Meteor.publish('tasks.statusCounts', function() {
+
+  const counts = {
+    tasksCount: TasksCollection.find({}).count()
+  };
+
+  for (let statusKey in taskStatuses) {
+    const statusValue = taskStatuses[statusKey];
+    counts[`${statusKey}_Count`] = TasksCollection.find({ status: statusValue }).count();
+  }
+
+  this.added('statusCounts', Random.id(), counts);
+  this.ready();
+});
+
 
 Meteor.publish('tasks', function publishTasks(page = 1, searchQuery = "", showCompleted = true) {
 
   const skip = (page - 1) * TASKS_PER_PAGE;
   console.log(`skip: ${skip}`)
 
-  const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted);
+  const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
 
 
   console.log(JSON.stringify(combinedFilters))
