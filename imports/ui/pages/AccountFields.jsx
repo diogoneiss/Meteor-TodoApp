@@ -9,31 +9,43 @@ const PhotoUploadBox = ({ photo, onPhotoChange }) => {
     </Box>
   );
 };
+export function userToState(user) {
+  const profile = user?.profile || {};
 
+  return {
+    name: profile.nome || '',
+    dob: profile.dataDeNascimento || '',
+    gender: profile.sexo || '',
+    company: profile.empresa || '',
+    photo: profile.foto || null,
+    username: user?.username || '',
+    email: profile.email || '',
+    password: '',
+  };
+}
+export const AccountFields = ({ formData, onLoad, onSubmit, hideRegister = false, disabled = false }) => {
 
+  const [fields, setFields] = useState(formData);
 
-const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false, disabled=false }) => {
-  const [name, setName] = useState(user?.profile?.nome || '');
-  const [dob, setDob] = useState(user?.profile?.dataDeNascimento || '');
-  const [gender, setGender] = useState(user?.profile?.sexo || '');
-  const [company, setCompany] = useState(user?.profile?.empresa || '');
-  const [photo, setPhoto] = useState(user?.profile?.foto || null);
-  const [username, setUsername] = useState(user?.username || '');
-  const [email, setEmail] = useState(user?.profile?.email || '');
-  const [password, setPassword] = useState('');
+  console.log("Data inside AccountFields");
+  console.log(fields)
+
+  useEffect(() => {
+    setFields(formData);
+  }, [formData]);
 
   useEffect(() => {
     if (onLoad) onLoad();
   }, [onLoad]);
 
-  const isGithubOAuth = user && user.profile && user.profile.oauth === 'github';
-  
+
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      setPhoto(reader.result);
+      setFields(prevFields => ({ ...prevFields, photo: reader.result }));
     };
 
     if (file) {
@@ -41,44 +53,35 @@ const AccountFields = ({ user, onLoad, onSubmit, hideRegister=false, disabled=fa
     }
   };
 
+  const handleChange = (field, value) => {
+    setFields(prevFields => ({ ...prevFields, [field]: value }));
+  };
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
-      const dados = {
-        name,
-        dob,
-        gender,
-        company,
-        photo,
-        email,
-        password,
-        username,
-      }
-      onSubmit(dados);
+      onSubmit(fields);
     }}>
-      {!isGithubOAuth && !hideRegister && (
+      {!hideRegister && (
         <>
-          <TextField fullWidth margin="normal" required label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <TextField fullWidth margin="normal" required label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <TextField fullWidth margin="normal" required type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <TextField fullWidth margin="normal" required label="Email" value={fields.email} onChange={(e) => handleChange('email', e.target.value)} />
+          <TextField fullWidth margin="normal" required label="Username" value={fields.username} onChange={(e) => handleChange('username', e.target.value)} />
+          <TextField fullWidth margin="normal" required type="password" label="Password" value={fields.password} onChange={(e) => handleChange('password', e.target.value)} />
         </>
       )}
-      <TextField disabled={disabled} fullWidth margin="normal" required label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
-      <TextField disabled={disabled} fullWidth margin="normal" required type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
+      <TextField disabled={disabled} fullWidth margin="normal" required label="Nome" value={fields.name} onChange={(e) => handleChange('name', e.target.value)} />
+      <TextField disabled={disabled} fullWidth margin="normal" required type="date" value={fields.dob} onChange={(e) => handleChange('dob', e.target.value)} />
       <FormControl disabled={disabled} fullWidth margin="normal">
         <InputLabel sx={{ backgroundColor: 'white', paddingLeft: 2, paddingRight: 2 }}>Sexo</InputLabel>
-        <Select value={gender} required onChange={(e) => setGender(e.target.value)}>
+        <Select value={fields.gender} required onChange={(e) => handleChange('gender', e.target.value)}>
           <MenuItem value={'male'}>Masculino</MenuItem>
           <MenuItem value={'female'}>Feminino</MenuItem>
         </Select>
       </FormControl>
-      <TextField disabled={disabled} fullWidth margin="normal" required label="Empresa que trabalha" value={company} onChange={(e) => setCompany(e.target.value)} />
-      <PhotoUploadBox disabled={disabled} photo={photo} onPhotoChange={handlePhotoChange} />
+      <TextField disabled={disabled} fullWidth margin="normal" required label="Empresa que trabalha" value={fields.company} onChange={(e) => handleChange('company', e.target.value)} />
+      <PhotoUploadBox disabled={disabled} photo={fields.photo} onPhotoChange={handlePhotoChange} />
 
-      {!disabled && <Button sx={{mt: "1rem"}} type="submit" variant="contained" color="primary" fullWidth>Salvar</Button>}
-      
+      {!disabled && <Button sx={{ mt: "1rem" }} type="submit" variant="contained" color="primary" fullWidth>Salvar</Button>}
+
     </form>
   );
 };
-
-export default AccountFields;

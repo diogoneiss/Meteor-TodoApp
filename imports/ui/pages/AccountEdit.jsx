@@ -12,10 +12,16 @@ import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../Task';
-import AccountFields from './AccountFields';
+import {userToState, AccountFields} from './AccountFields';
 
 export function AccountEdit({ user }) {
-  const [userFields, setUserFields] = useState(user);
+
+
+  
+
+  const [userFields, setUserFields] = useState(userToState(user));
+  const [originalFields, setOriginalFields] = useState(userToState(user));
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [error, setError] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -27,27 +33,20 @@ export function AccountEdit({ user }) {
     navigate(-1);
   };
 
-
-  const handleStatusChange = (newStatus) => {
-    setUserFields({ ...userFields, status: newStatus });
-  };
-
   const resetTask = () => {
-    let userWithoutPhoto = { ...userFields };
-    delete userWithoutPhoto.photo;
+    let originalUser = userToState(user);
+    console.log(originalUser)
+    console.log(`resetando usuario! empresa é ${userFields.company} e original é ${originalUser.company} `)
 
-    let originalUserWithoutPhoto = { ...user };
-    delete originalUserWithoutPhoto.photo;
-
-    console.log(`resetando usuario! era ${JSON.stringify(userWithoutPhoto)} e agora é ${JSON.stringify(originalUserWithoutPhoto)}`)
-    setUserFields(user);
+    setUserFields(originalFields);
   }
 
   //Duvida: preciso disso?
+  /*
   useEffect(() => {
     setUserFields(user);
   }, [user]);
-
+*/
 
   if (error) return <ErrorDisplay message={error.error} severity='error' />;
   if (loading || !userFields) return <CenteredLoading />;
@@ -82,7 +81,7 @@ export function AccountEdit({ user }) {
   return (
     <Container component="main" maxWidth="xs">
       {error && <ErrorDisplay message={error} />}
-      <AccountFields hideRegister={true} onSubmit={handleSubmit} user={userFields} disabled={!isEditMode} />
+      <AccountFields hideRegister={true} onSubmit={handleSubmit} formData={userFields} disabled={!isEditMode} />
 
       {!isEditMode ?
         <>
@@ -128,85 +127,6 @@ export function AccountEdit({ user }) {
 }
 
 
-const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
-  //Como poderiamos lidar com essa restrição de transição de status?
-  const [selectedStatus, setSelectedStatus] = useState(originalTask.status);
-  console.log("Status selecionado: ", selectedStatus)
-
-  const handleRadioChange = (event) => {
-    setSelectedStatus(event.target.value);
-    onStatusChange(event.target.value);
-  };
-
-  const determineAllowedStatuses = (status) => {
-    switch (status) {
-      case taskStatuses.CADASTRADA:
-        return [true, true, false];
-
-      case taskStatuses.EM_ANDAMENTO:
-        return [true, true, true];
-
-      case taskStatuses.CONCLUIDA:
-        return [true, false, true];
-      default:
-        console.error("Status inválido: ", status)
-        return [true, false, false];
-    }
-  }
-
-  const [allowedStatuses, setAllowedStatuses] = useState(determineAllowedStatuses(originalTask.status));
-
-  useEffect(() => {
-    setAllowedStatuses(determineAllowedStatuses(originalTask.status));
-    console.log("Status original: ", originalTask, "e allowedStatuses: ",)
-    console.log("Status no objeto: ", originalTask.status)
-    setSelectedStatus(originalTask.status);
-  }, [originalTask]);
-
-  //necessário para resetar o form
-  useEffect(() => {
-    setSelectedStatus(originalTask.status);
-  }, [disabled]);
-
-  return (
-    <FormControl component="fieldset">
-      <RadioGroup value={selectedStatus} onChange={handleRadioChange}>
-        <FormControlLabel
-          value={taskStatuses.CADASTRADA}
-          control={<Radio />}
-          label={taskStatuses.CADASTRADA}
-          disabled={disabled || !allowedStatuses[0]}
-        />
-        <FormControlLabel
-          value={taskStatuses.EM_ANDAMENTO}
-          control={<Radio />}
-          label={taskStatuses.EM_ANDAMENTO}
-          disabled={disabled || !allowedStatuses[1]}
-        />
-        <FormControlLabel
-          value={taskStatuses.CONCLUIDA}
-          control={<Radio />}
-          label={taskStatuses.CONCLUIDA}
-          disabled={disabled || !allowedStatuses[2]}
-        />
-      </RadioGroup>
-    </FormControl>
-  );
-};
-
-const TaskInfo = ({ task }) => {
-
-  const formatRelativeTime = (date) => {
-    return formatDistanceToNow(new Date(date), { addSuffix: true, locale: pt });
-  };
-
-  return (
-    <Box>
-      <Typography>Tarefa criada {formatRelativeTime(task.createdAt)}</Typography>
-      {task.updatedAt && <Typography>Atualizada pela última vez {formatRelativeTime(task.updatedAt)}</Typography>}
-    </Box>
-  );
-};
 
 
 export default AccountEdit;

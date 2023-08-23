@@ -5,7 +5,8 @@ import { LoginWithGithub } from '../components/LoginWithGithub';
 import { useNavigate } from 'react-router-dom';
 import CenteredContainer from '../components/CenteredContainer';
 import { AccountStatus, getAccountStatus } from '../utils/accountStatus'
-import AccountFields from './AccountFields';
+import {userToState, AccountFields} from './AccountFields';
+
 import AlertComponent from '../components/AlertComponent';
 const FormHeader = ({ accountStatus }) => (
   <Box mb={2}>
@@ -28,7 +29,7 @@ export const SignupForm = ({ user, accountStatus }) => {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const isGithubOAuth = user && user.profile && user.profile.oauth === 'github';
   const redirectAfterSignup = () => {
     navigate('/');
   };
@@ -68,7 +69,7 @@ export const SignupForm = ({ user, accountStatus }) => {
       <Container sx={{my: "2rem"}} component="main" maxWidth="md">
         {error && <AlertComponent severity="error" message={error} />}
         <FormHeader accountStatus={accountStatus} />
-        <AccountFields hideRegister={false} onSubmit={submit} user={user} />
+        <AccountFields hideRegister={isGithubOAuth} onSubmit={submit} formData={userToState(user)} />
       </Container>
     </Container>
   );
