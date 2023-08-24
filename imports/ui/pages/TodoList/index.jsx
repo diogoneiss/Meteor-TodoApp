@@ -2,21 +2,21 @@ import { Meteor } from 'meteor/meteor';
 import React, { useState, Fragment } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import { Task } from '../Task';
-import { TaskForm } from '../TaskForm';
-import { LoginForm } from './LoginPage';
+import { Task } from './Task';
+import { TaskForm } from './TaskForm';
+import { LoginPage } from '../Login';
 import { Typography, Container, Box, TextField, FormControlLabel, Switch, Button } from '@mui/material';
-import CenteredLoading from '../components/CenteredLoading';
-import { taskStatuses } from '../../models/taskModel';
+import CenteredLoading from '../../components/loading/CenteredLoading';
+import { taskStatuses } from '../../../models/taskModel';
 import { TodoHeader } from './todoHeader';
-import { TASKS_PER_PAGE } from '../../constants';
-import useTaskCounts from '../utils/taskCountHook';
+import { TASKS_PER_PAGE } from '../../../constants';
+import useTaskCounts from '../../utils/taskCountHook';
 
 
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 
-const App = () => {
+const TodoList = () => {
   const [showCompleted, setShowCompleted] = useState(false);
   const [showUserTasks, setShowUserTasks] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -150,4 +150,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default TodoList;

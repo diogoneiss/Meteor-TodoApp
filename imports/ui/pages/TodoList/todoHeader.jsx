@@ -1,10 +1,10 @@
 import React from 'react';
-import { TasksCount } from '../../db/TasksCount';
-import CenteredLoading from '../components/CenteredLoading';
+import { TasksCount } from '../../../db/TasksCount';
+import CenteredLoading from '../../components/loading/CenteredLoading';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Box, Typography } from '@mui/material';
-import useTaskCounts from '../utils/taskCountHook';
-import ResponsiveTypography from '../components/ResponsiveTypography';
+import useTaskCounts from '../../utils/taskCountHook';
+import ResponsiveTypography from '../../components/mui/ResponsiveTypography';
 export const TodoHeader = ({ showCompleted, searchQuery, userTasksCount }) => {
 
     const createTitle = () => {

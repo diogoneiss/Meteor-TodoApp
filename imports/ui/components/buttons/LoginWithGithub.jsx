@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Button, Box } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import {AccountStatus, getAccountStatus} from '../utils/accountStatus'
+import {AccountStatus, getAccountStatus} from '../../utils/accountStatus'
 export const LoginWithGithub = () => {
   const navigate = useNavigate();
 

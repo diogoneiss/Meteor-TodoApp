@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container, Typography, Grid, Paper, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { taskStatuses } from '../../models/taskModel';
+import { taskStatuses } from '../../../models/taskModel';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import CenteredLoading from '../components/CenteredLoading';
+import CenteredLoading from '../../components/loading/CenteredLoading';
 import { ArrowForward } from '@mui/icons-material';
-import useStatusCount from '../utils/StatusCountHook';
+import useStatusCount from '../../utils/StatusCountHook';
 
 const WelcomePage = () => {
 

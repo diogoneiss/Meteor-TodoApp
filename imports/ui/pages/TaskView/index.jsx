@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Container, RadioGroup, Radio, FormControl, Box, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CenteredLoading from '../components/CenteredLoading';
+import CenteredLoading from '../../components/loading/CenteredLoading';
 import { Meteor } from 'meteor/meteor';
 import { useParams } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import { taskStatuses } from '../../models/taskModel';
-import ErrorDisplay from '../components/AlertComponent';
+import { taskStatuses } from '../../../models/taskModel';
+import ErrorDisplay from '../../components/feedback/AlertComponent';
 import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import { Task } from '../Task';
+import { Task } from '../TodoList/Task';
 
 export function TaskViewEdit() {
   const [task, setTask] = useState(null);

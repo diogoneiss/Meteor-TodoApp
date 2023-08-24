@@ -9,7 +9,6 @@ const Footer = () => {
         <Box textAlign="center" py={3}>
           <Typography variant="subtitle1" gutterBottom>
             Lista avançada de tarefas utilizando MeteorJs, com frontend, backend e banco de dados integrados na mesma aplicação.
-            Confira o código fonte em{' '}
             <Box
               sx={{
                 display: 'flex',

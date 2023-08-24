@@ -3,7 +3,7 @@ import { ListItem, ListItemIcon, ListItemText, IconButton, Typography } from '@m
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import {taskStatuses} from '../models/taskModel';
+import {taskStatuses} from '../../../models/taskModel';
 import { useNavigate } from 'react-router-dom';
 
 export const Task = ({ task, onDeleteClick }) => {

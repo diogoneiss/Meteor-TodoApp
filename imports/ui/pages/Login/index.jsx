@@ -2,12 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Paper, Typography, Container, Alert, Box, Link as MuiLink } from '@mui/material';
 
-import { LoginWithGithub } from '../components/LoginWithGithub';
+import { LoginWithGithub } from '../../components/buttons/LoginWithGithub';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTracker } from 'meteor/react-meteor-data';
 import AlertComponent
-  from '../components/AlertComponent';
-export const LoginForm = ({ user }) => {
+  from '../../components/feedback/AlertComponent';
+
+export const LoginPage = ({ user }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -21,8 +21,8 @@ export const LoginForm = ({ user }) => {
 
   const submit = (e) => {
     e.preventDefault();
-    setError(null); // Clear previous error
-   
+    setError(null); 
+
     Meteor.loginWithPassword(username, password, (err) => {
       if (err) {
         setError(err.reason);
@@ -44,7 +44,7 @@ export const LoginForm = ({ user }) => {
         </Box>
 
         <form onSubmit={submit} noValidate>
-          {error && <Alert severity="error">{error}</Alert>}
+          {error && <AlertComponent message={error} severity="error"/>}
           <TextField
             variant="outlined"
             margin="normal"
@@ -62,20 +62,20 @@ export const LoginForm = ({ user }) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="senha"
             type="password"
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 3, mb: 2 }}>
-            Log In
+            Fazer login
           </Button>
           <Button component={Link} to="/signup" fullWidth variant="outlined" color="primary" sx={{ mt: 2 }}>
-            Sign Up Page
+            Criar uma conta
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <MuiLink component={Link} to="/reset-password" variant="body2">
-              Forgot Password?
+              Esqueci minha senha
             </MuiLink>
           </Box>
         </form>
@@ -83,3 +83,5 @@ export const LoginForm = ({ user }) => {
     </Container>
   );
 };
+
+export default LoginPage;

@@ -1,31 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box, Container, Alert, Typography } from '@mui/material';
-import { LoginWithGithub } from '../components/LoginWithGithub';
+import { LoginWithGithub } from '../../components/buttons/LoginWithGithub';
 import { useNavigate } from 'react-router-dom';
-import CenteredContainer from '../components/CenteredContainer';
-import { AccountStatus, getAccountStatus } from '../utils/accountStatus'
-import {userToState, AccountFields} from './AccountFields';
+import CenteredContainer from '../../components/mui/CenteredContainer';
+import { AccountStatus, getAccountStatus } from '../../utils/accountStatus'
+import {userToState, AccountFields} from '../../components/form/AccountFields';
+import FormHeader from './formHeader';
+import AlertComponent from '../../components/feedback/AlertComponent';
 
-import AlertComponent from '../components/AlertComponent';
-const FormHeader = ({ accountStatus }) => (
-  <Box mb={2}>
-    <Typography align='center' variant='h3' gutterBottom>Cadastro de usuário</Typography>
-    {accountStatus === AccountStatus.PARTIAL &&
-      <Typography align='center' variant='h4'>Preencha esses dados para completar seu cadastro</Typography>
-    }
-
-    {accountStatus === AccountStatus.LOGGED_OUT &&
-      <>
-        <Typography align='center' variant='h3'>Crie sua conta ou agilize o processo com o Github</Typography>
-        <LoginWithGithub />
-      </>
-    }
-  </Box>
-);
-
-
-export const SignupForm = ({ user, accountStatus }) => {
+export const SignupPage = ({ user, accountStatus }) => {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -38,7 +22,6 @@ export const SignupForm = ({ user, accountStatus }) => {
 
     console.log("status inside signup: ", accountStatus)
     if (accountStatus === AccountStatus.FULL) {
-
       redirectAfterSignup();
     }
   }
@@ -74,3 +57,5 @@ export const SignupForm = ({ user, accountStatus }) => {
     </Container>
   );
 };
+
+export default SignupPage;

@@ -16,10 +16,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import StyledLink from './StyledLink';
+import StyledLink from './mui/StyledLink';
 import { useLocation, useNavigate } from "react-router-dom";
 
-import ResponsiveTypography from './ResponsiveTypography';
+import ResponsiveTypography from './mui/ResponsiveTypography';
 const UserPhoto = ({ user }) => {
   console.log("user: ", user)
   return (
