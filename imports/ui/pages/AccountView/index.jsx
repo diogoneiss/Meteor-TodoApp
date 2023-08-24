@@ -6,7 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import { useParams } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import { taskStatuses } from '../../../models/taskModel';
+import { taskStatuses } from '../../../enums/taskModel';
 import ErrorDisplay from '../../components/feedback/AlertComponent';
 import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';

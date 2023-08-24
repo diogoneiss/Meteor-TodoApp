@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from '/imports/db/TasksCollection';
 import { check } from 'meteor/check';
 import { Log } from 'meteor/logging'
-import { taskStatuses } from '../models/taskModel';
+import { taskStatuses } from '../enums/taskModel';
 import { Random } from 'meteor/random';
 import { TASKS_PER_PAGE } from '../constants';
 

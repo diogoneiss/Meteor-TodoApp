@@ -36,7 +36,7 @@ export const LoginWithGithub = () => {
         onClick={handleGithubLogin}
         fullWidth
       >
-        Login with Github
+        Entre com seu Github
       </Button>
     </Box>
   );

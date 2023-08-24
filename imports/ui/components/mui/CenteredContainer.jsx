@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-function CenteredContainer({ children, style }) {
+function CenteredContainer({ children, style, height="70vh", ...props }) {
   return (
     <Box
       sx={{
@@ -9,9 +9,10 @@ function CenteredContainer({ children, style }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        height: height,
         ...style, 
       }}
+      {...props}
     >
       {children}
     </Box>

@@ -7,7 +7,7 @@ import { TaskForm } from './TaskForm';
 import { LoginPage } from '../Login';
 import { Typography, Container, Box, TextField, FormControlLabel, Switch, Button } from '@mui/material';
 import CenteredLoading from '../../components/loading/CenteredLoading';
-import { taskStatuses } from '../../../models/taskModel';
+import { taskStatuses } from '../../../enums/taskModel';
 import { TodoHeader } from './todoHeader';
 import { TASKS_PER_PAGE } from '../../../constants';
 import useTaskCounts from '../../utils/taskCountHook';

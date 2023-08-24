@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { TasksCollection } from '../db/TasksCollection';
 import { Log } from 'meteor/logging'
-import { taskStatuses } from '../models/taskModel';
+import { taskStatuses } from '../enums/taskModel';
 
 Meteor.methods({
   'task.byId': function getTaskById(taskId) {

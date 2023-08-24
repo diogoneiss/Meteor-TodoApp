@@ -1,9 +1,50 @@
 import { createTheme } from '@mui/material/styles';
 
-// 1. Create your theme.
+
 const theme = createTheme();
 
-// 2. Adjust the typography definitions for each heading.
+function generateTypography(theme, baseSize=1) {
+
+  const variantScales = {
+    h1: 2,
+    h2: 1.75,
+    h3: 1.5,
+    h4: 1.25,
+    h5: 1,
+    h6: 0.875,
+    button: 0.9,
+  };
+
+  const typography = {};
+
+  for (let variant in variantScales) {
+    
+    typography[variant] = {
+      // herdar as propriedades definidas anteriormente
+      ...theme.typography[variant],
+      //criar novas propriedades nas escalas desejadas
+      fontSize: `${baseSize * variantScales[variant]}rem`,
+      '@media (min-width:600px)': {
+        fontSize: `${baseSize * variantScales[variant] * 1.25}rem`
+      },
+      [theme.breakpoints.up('md')]: {
+        fontSize: `${baseSize * variantScales[variant] * 1.5}rem`
+      }
+    };
+  }
+  return typography;
+}
+
+const baseScale = 1; 
+const generatedTypography = generateTypography(theme, baseScale);
+
+theme.typography = {
+  ...theme.typography,
+  ...generatedTypography
+};
+
+
+/*
 theme.typography.h1 = {
   ...theme.typography.h1,
   fontSize: '2rem',
@@ -69,5 +110,5 @@ theme.typography.h6 = {
     fontSize: '1.5rem',
   },
 };
-
+*/
 export default theme;
