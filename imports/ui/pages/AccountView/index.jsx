@@ -11,7 +11,7 @@ import ErrorDisplay from '../../components/feedback/AlertComponent';
 import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import { Task } from '../TodoList/Task';
+import { Task } from '../TodoList/TaskCell';
 import {userToState, AccountFields} from '../../components/form/AccountFields';
 
 export function AccountEdit({ user }) {

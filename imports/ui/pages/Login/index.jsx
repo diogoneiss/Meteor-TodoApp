@@ -6,6 +6,7 @@ import { LoginWithGithub } from '../../components/buttons/LoginWithGithub';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertComponent
   from '../../components/feedback/AlertComponent';
+import CenteredContainer from '../../components/mui/CenteredContainer';
 
 export const LoginPage = ({ user }) => {
   const [username, setUsername] = useState('');
@@ -34,8 +35,9 @@ export const LoginPage = ({ user }) => {
   };
 
   return (
+    <CenteredContainer>
+
     <Container component="main" maxWidth="xs">
-      
       <Paper elevation={3} sx={{ padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h5">Login</Typography>
 
@@ -81,6 +83,7 @@ export const LoginPage = ({ user }) => {
         </form>
       </Paper>
     </Container>
+    </CenteredContainer>
   );
 };
 

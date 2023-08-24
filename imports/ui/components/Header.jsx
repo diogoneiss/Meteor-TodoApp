@@ -57,14 +57,18 @@ export default function MenuAppBar({ user }) {
   const navigate = useNavigate();
 
   const getTitleByLocation = () => {
-    if (/^\/app(\/.*)?$/.test(location.pathname)) {
+    //regex para lidar com os ids das tarefas
+    if (/^\/app\/.*$/.test(location.pathname)) {
       return "Visualizando tarefa";
     }
     switch (location.pathname) {
       case '/login': return 'Login';
-      case '/signup': return 'Signup';
-      case '/app': return 'App';
-      default: return 'Home';
+      case '/signup': return 'Cadastro de conta';
+      case '/app': return 'Lista de tarefas';
+      case '/account': return 'Minha conta';
+      case '/': return 'Bem vindo';
+      case '/reset-password': return 'Redefinir senha';
+      default: return 'Aplicação lista de tarefas';
     }
   };
 

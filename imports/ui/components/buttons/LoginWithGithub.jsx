@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography, Container } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import {AccountStatus, getAccountStatus} from '../../utils/accountStatus'
@@ -28,6 +28,7 @@ export const LoginWithGithub = () => {
 
   return (
     <Box my={2}> 
+    <Container maxWidth="xs">
       <Button 
         type="button" 
         variant="outlined" 
@@ -36,8 +37,11 @@ export const LoginWithGithub = () => {
         onClick={handleGithubLogin}
         fullWidth
       >
+        <Typography variant="button" >
         Entre com seu Github
+        </Typography>
       </Button>
+    </Container>
     </Box>
   );
 };

@@ -2,13 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import React, { useState, Fragment } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TasksCollection } from '/imports/db/TasksCollection';
-import { Task } from './Task';
-import { TaskForm } from './TaskForm';
+import { Task } from './TaskCell';
+import { TaskCreation } from './TaskCreation';
 import { LoginPage } from '../Login';
 import { Typography, Container, Box, TextField, FormControlLabel, Switch, Button } from '@mui/material';
 import CenteredLoading from '../../components/loading/CenteredLoading';
 import { taskStatuses } from '../../../enums/taskModel';
-import { TodoHeader } from './todoHeader';
+import { TodoHeader } from './todoTitle';
 import { TASKS_PER_PAGE } from '../../../constants';
 import useTaskCounts from '../../utils/taskCountHook';
 
@@ -59,8 +59,6 @@ const TodoList = () => {
     return { tasks, isLoading: false };
   });
 
-  console.log("Tamanho do tasks: ", tasks.length)
-
   return (
     <div className="app">
       
@@ -68,8 +66,9 @@ const TodoList = () => {
       <div className="main">
         <Fragment>
           <TodoHeader searchQuery={searchQuery} showCompleted={showCompleted} userTasksCount={userTasksCount} />
-          <TaskForm />
+         
           <Container maxWidth="sm">
+          <TaskCreation />
             <Box mt={2}>
               <TextField
                 label="Buscar tarefas"

@@ -12,7 +12,7 @@ function generateTypography(theme, baseSize=1) {
     h4: 1.25,
     h5: 1,
     h6: 0.875,
-    button: 0.9,
+    button: 0.7,
   };
 
   const typography = {};
