@@ -71,12 +71,12 @@ Meteor.publish('tasks.statusCounts', function() {
 });
 
 
-Meteor.publish('tasks', function publishTasks(page = 1, searchQuery = "", showCompleted = true) {
+Meteor.publish('tasks', function publishTasks(page = 1, searchQuery = "", showCompleted = true, showOtherUsers = true) {
 
   const skip = (page - 1) * TASKS_PER_PAGE;
   console.log(`skip: ${skip}`)
 
-  const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted, true);
+  const combinedFilters = createCollectionFilters(this.userId, searchQuery, showCompleted, showOtherUsers);
 
 
   console.log(JSON.stringify(combinedFilters))

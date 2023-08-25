@@ -18,7 +18,7 @@ const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
 const TodoList = () => {
   const [showCompleted, setShowCompleted] = useState(false);
-  const [showUserTasks, setShowUserTasks] = useState(false);
+  const [showJustUserTasks, setShowJustUserTasks] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -48,7 +48,7 @@ const TodoList = () => {
       return noDataAvailable;
     }
 
-    const handler = Meteor.subscribe('tasks', currentPage, searchQuery, showCompleted);
+    const handler = Meteor.subscribe('tasks', currentPage, searchQuery, showCompleted, !showJustUserTasks);
 
     if (!handler.ready()) {
       return { ...noDataAvailable, isLoading: true };
@@ -91,8 +91,8 @@ const TodoList = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={showUserTasks}
-                    onChange={() => setShowUserTasks(!showUserTasks)}
+                    checked={showJustUserTasks}
+                    onChange={() => setShowJustUserTasks(!showJustUserTasks)}
                     color="primary"
                   />
                 }

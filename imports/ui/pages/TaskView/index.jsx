@@ -10,6 +10,9 @@ import { formatDistanceToNow } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import CenteredContainer from '../../components/mui/CenteredContainer';
+import { TaskInfo } from './TaskInfo';
+import { TransitionSelect  } from './TransitionSelect';
+
 
 export function TaskViewEdit() {
   const [task, setTask] = useState(null);
@@ -118,7 +121,7 @@ export function TaskViewEdit() {
           {/*
         Detalhe importante: usamos o valor da task original pois o valor da task atual pode ter sido alterado pelo usuário, mas ainda não foi salvo no banco de dados, então a regra de negócio pode ser violada
         */}
-          <TransitionForm disabled={!isEditMode} originalStatus={originalTask.status} originalTask={originalTask} onStatusChange={handleStatusChange} />
+          <TransitionSelect disabled={!isEditMode} originalStatus={originalTask.status} originalTask={originalTask} onStatusChange={handleStatusChange} />
 
 
           <FormControlLabel
@@ -181,84 +184,5 @@ export function TaskViewEdit() {
     </Container>
   );
 }
-
-
-const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
-
-  const [selectedStatus, setSelectedStatus] = useState(originalTask.status);
-
-  const handleRadioChange = (event) => {
-    setSelectedStatus(event.target.value);
-    onStatusChange(event.target.value);
-  };
-
-  const determineAllowedStatuses = (status) => {
-    switch (status) {
-      case taskStatuses.CADASTRADA:
-        return [true, true, false];
-
-      case taskStatuses.EM_ANDAMENTO:
-        return [true, true, true];
-
-      case taskStatuses.CONCLUIDA:
-        return [true, false, true];
-      default:
-        console.error("Status inválido: ", status)
-        return [true, false, false];
-    }
-  }
-
-  const [allowedStatuses, setAllowedStatuses] = useState(determineAllowedStatuses(originalTask.status));
-
-  useEffect(() => {
-    setAllowedStatuses(determineAllowedStatuses(originalTask.status));
-    setSelectedStatus(originalTask.status);
-  }, [originalTask]);
-
-  //necessário para resetar o form
-  useEffect(() => {
-    setSelectedStatus(originalTask.status);
-  }, [disabled]);
-
-  return (
-    <FormControl component="fieldset">
-      <RadioGroup value={selectedStatus} onChange={handleRadioChange}>
-        <FormControlLabel
-          value={taskStatuses.CADASTRADA}
-          control={<Radio />}
-          label={taskStatuses.CADASTRADA}
-          disabled={disabled || !allowedStatuses[0]}
-        />
-        <FormControlLabel
-          value={taskStatuses.EM_ANDAMENTO}
-          control={<Radio />}
-          label={taskStatuses.EM_ANDAMENTO}
-          disabled={disabled || !allowedStatuses[1]}
-        />
-        <FormControlLabel
-          value={taskStatuses.CONCLUIDA}
-          control={<Radio />}
-          label={taskStatuses.CONCLUIDA}
-          disabled={disabled || !allowedStatuses[2]}
-        />
-      </RadioGroup>
-    </FormControl>
-  );
-};
-
-const TaskInfo = ({ task }) => {
-
-  const formatRelativeTime = (date) => {
-    return formatDistanceToNow(new Date(date), { addSuffix: true, locale: pt });
-  };
-
-  return (
-    <Box>
-      <Typography>Tarefa criada {formatRelativeTime(task.createdAt)}</Typography>
-      {task.updatedAt && <Typography>Atualizada pela última vez {formatRelativeTime(task.updatedAt)}</Typography>}
-    </Box>
-  );
-};
-
 
 export default TaskViewEdit;

@@ -12,6 +12,9 @@ export const TodoHeader = ({ showCompleted, searchQuery, userTasksCount }) => {
             return "Carregando..";
         }
         else if (userTasksCount === 0) {
+            if (searchQuery){
+                return "Nenhuma tarefa encontrada correspondente a busca";
+            }
             return "Você não tem tarefas pendentes";
         }
         let title = `Você tem ${userTasksCount} tarefas`;
