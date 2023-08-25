@@ -19,7 +19,7 @@ export const useStatusCount  = () => useTracker(() => {
     let counts = StatusCount.findOne();
   
     if (!counts) return noDataAvailable;
-    console.log("Registro no banco, dentro do hook: ", counts)
+    //console.log("Registro no banco, dentro do hook: ", counts)
     const {_, tasksCount, CADASTRADA_Count, EM_ANDAMENTO_Count, CONCLUIDA_Count } = counts;
 
     return { tasksCount, CADASTRADA_Count, EM_ANDAMENTO_Count, CONCLUIDA_Count, isLoading: false };

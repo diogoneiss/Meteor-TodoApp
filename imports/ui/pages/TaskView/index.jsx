@@ -184,9 +184,8 @@ export function TaskViewEdit() {
 
 
 const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
-  //Como poderiamos lidar com essa restrição de transição de status?
+
   const [selectedStatus, setSelectedStatus] = useState(originalTask.status);
-  console.log("Status selecionado: ", selectedStatus)
 
   const handleRadioChange = (event) => {
     setSelectedStatus(event.target.value);
@@ -213,8 +212,6 @@ const TransitionForm = ({ originalTask, onStatusChange, disabled }) => {
 
   useEffect(() => {
     setAllowedStatuses(determineAllowedStatuses(originalTask.status));
-    console.log("Status original: ", originalTask, "e allowedStatuses: ",)
-    console.log("Status no objeto: ", originalTask.status)
     setSelectedStatus(originalTask.status);
   }, [originalTask]);
 

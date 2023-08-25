@@ -1,13 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import {AccountStatus, getAccountStatus} from '../utils/accountStatus'
 
 import React from 'react';
 
-const ProtectedRoute = ({ children, user, accStatus }) => {
+const ProtectedRoute = ({ user, accStatus }) => {
  
   if (!user) {
+    console.log("redirecionando para login..")
     return <Navigate to="/login" />;
   }
   else if (accStatus === AccountStatus.PARTIAL) {
@@ -15,7 +16,11 @@ const ProtectedRoute = ({ children, user, accStatus }) => {
     return <Navigate to="/signup" />;
   }
 
-  return children;
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 };
 
 export default ProtectedRoute;

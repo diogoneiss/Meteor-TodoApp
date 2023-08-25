@@ -19,9 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import StyledLink from './mui/StyledLink';
 import { useLocation, useNavigate } from "react-router-dom";
 
-import ResponsiveTypography from './mui/ResponsiveTypography';
 const UserPhoto = ({ user }) => {
-  console.log("user: ", user)
   return (
     <ListItemIcon>
       {user.profile.foto ? (
